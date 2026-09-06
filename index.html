@@ -1051,7 +1051,7 @@ function displaySpirits() {
   class="variant-image"
   src="${image}"
   alt="${sprite.name} ${variantName}"
-  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+  onerror="this.style.display='none'; this.parentElement.querySelector('.image-error').style.display='flex';"
 >
 
   `;
