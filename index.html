@@ -83,7 +83,7 @@
 
     .progress-bar {
       height: 100%;
-      width: 0%;
+      width: 0%;ll.
       background: linear-gradient(90deg, #00aaff, #00eaff);
       transition: width 0.3s;
     }
@@ -1031,11 +1031,12 @@ function displaySpirits() {
 
   imageHTML = `
 
-    <img
-      class="variant-image"
-      src="${image}"
-      alt="${sprite.name} ${variantName}"
-    >
+<img
+  class="variant-image"
+  src="${image}"
+  alt="${sprite.name} ${variantName}"
+  onerror="this.outerHTML='<div class=\"image-error\"><div class=\"error-icon\">❗</div><div>L’image n’a pas pu être chargée</div></div>'"
+>
 
   `;
 
