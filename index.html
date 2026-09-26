@@ -1578,7 +1578,7 @@ async function exportImage() {
 
       img.onerror = () => resolve(null);
 
-      img.src = src;
+      img.src = new URL(src, document.baseURI).href;
 
     });
 
