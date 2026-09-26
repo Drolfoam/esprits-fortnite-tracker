@@ -1417,27 +1417,20 @@ EXPORTER LA COLLECTION EN IMAGE
 
 async function exportImage() {
 
-  const canvas =
-    document.createElement("canvas");
-
-  const ctx =
-    canvas.getContext("2d");
-
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
 
   const scale = 2;
 
-  const padding = 50;
-
-  const titleHeight = 100;
-
-  const rowHeight = 70;
-
-  const footerHeight = 110;
-
+  const padding = 40;
+  const titleHeight = 120;
+  const headerHeight = 90;
+  const rowHeight = 105;
+  const footerHeight = 90;
 
   /*
   ====================================================
-  COLONNES DE L'EXPORT
+  COLONNES
   ====================================================
   */
 
@@ -1450,30 +1443,20 @@ async function exportImage() {
     "Chasseur de prime"
   ];
 
-
-const columnWidths = [
-  200,
-  180,
-  180,
-  200,
-  200,
-  200
-];
-
-
-  /*
-  ====================================================
-  LARGEUR TOTALE
-  ====================================================
-  */
+  const columnWidths = [
+    250,
+    170,
+    170,
+    220,
+    220,
+    220
+  ];
 
   const totalWidth =
     columnWidths.reduce(
-      (sum, width) =>
-        sum + width,
+      (sum, width) => sum + width,
       0
-    ) +
-    padding * 2;
+    ) + padding * 2;
 
 
   /*
@@ -1484,82 +1467,55 @@ const columnWidths = [
 
   const rows = [];
 
+  spirits.forEach(sprite => {
 
-  spirits.forEach(
-    sprite => {
+    const row = {
+      name: sprite.name,
+      image: sprite.variants[0]
+        ? sprite.variants[0][1]
+        : null,
+      variants: {}
+    };
 
-      const row = {
+    sprite.variants.forEach(variant => {
 
-        name:
-          sprite.name,
+      const variantName = variant[0];
 
-        variants: {}
-
-      };
-
-
-      sprite.variants.forEach(
-        variant => {
-
-          const variantName =
-            variant[0];
-
-
-          const id =
-            getId(
-              sprite.name,
-              variantName
-            );
-
-
-          row.variants[
-            variantName
-          ] =
-            getStatus(id);
-
-        }
+      const id = getId(
+        sprite.name,
+        variantName
       );
 
+      row.variants[variantName] = {
+        status: getStatus(id),
+        image: variant[1]
+      };
 
-      rows.push(row);
+    });
 
-    }
-  );
+    rows.push(row);
+
+  });
 
 
   /*
   ====================================================
-  HAUTEUR TOTALE
+  HAUTEUR
   ====================================================
   */
 
   const totalHeight =
-    padding * 2
-    +
-    titleHeight
-    +
-    rowHeight
-    +
-    rows.length *
-    rowHeight
-    +
+    padding * 2 +
+    titleHeight +
+    headerHeight +
+    rows.length * rowHeight +
     footerHeight;
 
 
-  canvas.width =
-    totalWidth *
-    scale;
+  canvas.width = totalWidth * scale;
+  canvas.height = totalHeight * scale;
 
-
-  canvas.height =
-    totalHeight *
-    scale;
-
-
-  ctx.scale(
-    scale,
-    scale
-  );
+  ctx.scale(scale, scale);
 
 
   /*
@@ -1576,28 +1532,22 @@ const columnWidths = [
       totalHeight
     );
 
-
   gradient.addColorStop(
     0,
     "#06132f"
   );
-
 
   gradient.addColorStop(
     0.5,
     "#071d4d"
   );
 
-
   gradient.addColorStop(
     1,
     "#020817"
   );
 
-
-  ctx.fillStyle =
-    gradient;
-
+  ctx.fillStyle = gradient;
 
   ctx.fillRect(
     0,
@@ -1609,26 +1559,141 @@ const columnWidths = [
 
   /*
   ====================================================
+  CHARGER UNE IMAGE
+  ====================================================
+  */
+
+  function loadImage(src) {
+
+    return new Promise(resolve => {
+
+      if (!src) {
+        resolve(null);
+        return;
+      }
+
+      const img = new Image();
+
+      img.onload = () => resolve(img);
+
+      img.onerror = () => resolve(null);
+
+      img.src = src;
+
+    });
+
+  }
+
+
+  /*
+  ====================================================
+  DESSINER UNE IMAGE ENTIÈREMENT DANS UNE CASE
+  ====================================================
+  */
+
+  function drawImageContain(
+    img,
+    x,
+    y,
+    width,
+    height,
+    opacity = 1
+  ) {
+
+    if (!img) return;
+
+    const ratio =
+      Math.min(
+        width / img.width,
+        height / img.height
+      );
+
+    const drawWidth =
+      img.width * ratio;
+
+    const drawHeight =
+      img.height * ratio;
+
+    const drawX =
+      x + (width - drawWidth) / 2;
+
+    const drawY =
+      y + (height - drawHeight) / 2;
+
+    ctx.save();
+
+    ctx.globalAlpha = opacity;
+
+    ctx.drawImage(
+      img,
+      drawX,
+      drawY,
+      drawWidth,
+      drawHeight
+    );
+
+    ctx.restore();
+
+  }
+
+
+  /*
+  ====================================================
+  CHARGER TOUTES LES IMAGES
+  ====================================================
+  */
+
+  const imageCache = {};
+
+  for (const row of rows) {
+
+    if (
+      row.image &&
+      !imageCache[row.image]
+    ) {
+
+      imageCache[row.image] =
+        await loadImage(row.image);
+
+    }
+
+    for (const variantName in row.variants) {
+
+      const image =
+        row.variants[variantName].image;
+
+      if (
+        image &&
+        !imageCache[image]
+      ) {
+
+        imageCache[image] =
+          await loadImage(image);
+
+      }
+
+    }
+
+  }
+
+
+  /*
+  ====================================================
   TITRE
   ====================================================
   */
 
-  ctx.fillStyle =
-    "#ffffff";
-
+  ctx.fillStyle = "#ffffff";
 
   ctx.font =
-    "bold 34px Arial";
+    "bold 36px Arial";
 
-
-  ctx.textAlign =
-    "left";
-
+  ctx.textAlign = "left";
 
   ctx.fillText(
     "👻 Ma collection d'esprits Fortnite",
     padding,
-    padding + 45
+    padding + 42
   );
 
 
@@ -1639,66 +1704,119 @@ const columnWidths = [
   */
 
   let total = 0;
-
   let collected = 0;
 
+  spirits.forEach(sprite => {
 
-  spirits.forEach(
-    sprite => {
+    sprite.variants.forEach(variant => {
 
-      sprite.variants.forEach(
-        variant => {
+      total++;
 
-          total++;
-
-
-          const id =
-            getId(
-              sprite.name,
-              variant[0]
-            );
-
-
-          if (
-            getStatus(id) !== 0
-          ) {
-
-            collected++;
-
-          }
-
-        }
+      const id = getId(
+        sprite.name,
+        variant[0]
       );
 
-    }
-  );
+      if (getStatus(id) !== 0) {
+        collected++;
+      }
+
+    });
+
+  });
 
 
   ctx.font =
-    "18px Arial";
-
+    "20px Arial";
 
   ctx.fillStyle =
     "#bcdcff";
 
-
   ctx.fillText(
     `Progression : ${collected} / ${total}`,
     padding,
-    padding + 75
+    padding + 78
   );
 
-  ctx.textAlign = "left";
 
-ctx.fillStyle = "#bcdcff";
+  /*
+  ====================================================
+  LÉGENDE
+  ====================================================
+  */
 
-ctx.font = "16px Arial";
+  const legendY =
+    padding + 104;
 
-ctx.fillText(
-  "➖ Non obtenu   🟩 Obtenu   🟨 Maîtrisé   🟥 Perdu",
-  padding + 300,
-  padding + 75
-);
+  ctx.font =
+    "15px Arial";
+
+  ctx.textAlign =
+    "left";
+
+  function drawLegend(
+    x,
+    color,
+    text
+  ) {
+
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x + 7,
+      legendY - 5,
+      7,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      "#bcdcff";
+
+    ctx.fillText(
+      text,
+      x + 20,
+      legendY
+    );
+
+  }
+
+  let legendX =
+    padding + 300;
+
+  drawLegend(
+    legendX,
+    "#94a3b8",
+    "Non obtenu"
+  );
+
+  legendX += 125;
+
+  drawLegend(
+    legendX,
+    "#10b981",
+    "Obtenu"
+  );
+
+  legendX += 95;
+
+  drawLegend(
+    legendX,
+    "#fbbf24",
+    "Maîtrisé"
+  );
+
+  legendX += 115;
+
+  drawLegend(
+    legendX,
+    "#dc2626",
+    "Perdu"
+  );
 
 
   /*
@@ -1711,6 +1829,9 @@ ctx.fillText(
     padding +
     titleHeight;
 
+  let xOffset =
+    padding;
+
 
   /*
   ====================================================
@@ -1718,61 +1839,48 @@ ctx.fillText(
   ====================================================
   */
 
-  let xOffset =
-    padding;
-
-
   columns.forEach(
-    (
-      column,
-      index
-    ) => {
+    (column, index) => {
 
       ctx.fillStyle =
         "#1265d8";
-
 
       ctx.fillRect(
         xOffset,
         tableY,
         columnWidths[index],
-        rowHeight
+        headerHeight
       );
-
 
       ctx.strokeStyle =
         "#4da3ff";
 
+      ctx.lineWidth = 1;
 
       ctx.strokeRect(
         xOffset,
         tableY,
         columnWidths[index],
-        rowHeight
+        headerHeight
       );
-
 
       ctx.fillStyle =
         "#ffffff";
 
-
       ctx.font =
         "bold 16px Arial";
 
-
       ctx.textAlign =
         "center";
-
 
       ctx.fillText(
         column,
         xOffset +
           columnWidths[index] / 2,
         tableY +
-          rowHeight / 2 +
+          headerHeight / 2 +
           6
       );
-
 
       xOffset +=
         columnWidths[index];
@@ -1787,258 +1895,137 @@ ctx.fillText(
   ====================================================
   */
 
-  rows.forEach(
-    (
-      row,
-      rowIndex
-    ) => {
-
-      const yOffset =
-        tableY +
-        rowHeight +
-        rowIndex *
-        rowHeight;
-
-
-      /*
-      ================================================
-      NOM DE L'ESPRIT
-      ================================================
-      */
-
-      let xOffset =
-        padding;
-
-
-      const nameBackground =
-        rowIndex % 2 === 0
-          ? "#0b2857"
-          : "#082044";
-
-
-      ctx.fillStyle =
-        nameBackground;
-
-
-      ctx.fillRect(
-        xOffset,
-        yOffset,
-        columnWidths[0],
-        rowHeight
-      );
-
-
-      ctx.strokeStyle =
-        "#315b8f";
-
-
-      ctx.strokeRect(
-        xOffset,
-        yOffset,
-        columnWidths[0],
-        rowHeight
-      );
-
-
-      ctx.fillStyle =
-        "#f8fafc";
-
-
-      ctx.font =
-        "bold 15px Arial";
-
-
-      ctx.textAlign =
-        "center";
-
-
-      ctx.fillText(
-        row.name,
-        xOffset +
-          columnWidths[0] / 2,
-        yOffset +
-          rowHeight / 2 +
-          5
-      );
-
-
-      xOffset +=
-        columnWidths[0];
-
-
-      /*
-      ================================================
-      VARIANTES
-      ================================================
-      */
-
-      columns
-        .slice(1)
-        .forEach(
-          (
-            column,
-            colIndex
-          ) => {
-
-            const status =
-              row.variants[column];
-
-
-            /*
-            ==========================================
-            VARIANTE INEXISTANTE
-            ==========================================
-            */
-
-            if (
-              status === undefined
-            ) {
-
-              ctx.fillStyle =
-                rowIndex % 2 === 0
-                  ? "#0b2857"
-                  : "#082044";
-
-              ctx.fillRect(
-                xOffset,
-                yOffset,
-                columnWidths[
-                  colIndex + 1
-                ],
-                rowHeight
-              );
-
-            }
-
-
-            /*
-            ==========================================
-            VARIANTE EXISTANTE
-            ==========================================
-            */
-
-            else {
-
-              let background =
-                "#0f172a";
-
-
-              let statusText =
-                "—";
-
-
-              /*
-              OBTENU
-              */
-
-              if (
-                status === 1
-              ) {
-
-                background =
-                  "#10b981";
-
-                statusText =
-                  "✓";
-
-              }
-
-
-              /*
-              MAÎTRISÉ
-              */
-
-              else if (
-                status === 2
-              ) {
-
-                background =
-                  "#fbbf24";
-
-                statusText =
-                  "★";
-
-              }
-
-
-              /*
-              PERDU
-              */
-
-              else if (
-                status === 3
-              ) {
-
-                background =
-                  "#dc2626";
-
-                statusText =
-                  "✗";
-
-              }
-
-
-              /*
-              ======================================
-              FOND DE LA CASE
-              ======================================
-              */
-
-              ctx.fillStyle =
-                background;
-
-
-              ctx.fillRect(
-                xOffset,
-                yOffset,
-                columnWidths[
-                  colIndex + 1
-                ],
-                rowHeight
-              );
-
-
-              /*
-              ======================================
-              SYMBOLE
-              ======================================
-              */
-
-              ctx.fillStyle =
-                "#ffffff";
-
-
-              ctx.font =
-                "bold 26px Arial";
-
-
-              ctx.textAlign =
-                "center";
-
-
-              ctx.fillText(
-                statusText,
-                xOffset +
-                  columnWidths[
-                    colIndex + 1
-                  ] / 2,
-                yOffset +
-                  rowHeight / 2 +
-                  9
-              );
-
-            }
-
-
-            /*
-            ==========================================
-            BORDURE
-            ==========================================
-            */
+  for (
+    let rowIndex = 0;
+    rowIndex < rows.length;
+    rowIndex++
+  ) {
+
+    const row =
+      rows[rowIndex];
+
+    const yOffset =
+      tableY +
+      headerHeight +
+      rowIndex *
+      rowHeight;
+
+
+    /*
+    ================================================
+    ESPRIT
+    ================================================
+    */
+
+    let xOffset =
+      padding;
+
+    const rowBackground =
+      rowIndex % 2 === 0
+        ? "#0b2857"
+        : "#082044";
+
+    ctx.fillStyle =
+      rowBackground;
+
+    ctx.fillRect(
+      xOffset,
+      yOffset,
+      columnWidths[0],
+      rowHeight
+    );
+
+    ctx.strokeStyle =
+      "#315b8f";
+
+    ctx.strokeRect(
+      xOffset,
+      yOffset,
+      columnWidths[0],
+      rowHeight
+    );
+
+
+    /*
+    IMAGE DE L'ESPRIT
+    */
+
+    const spiritImage =
+      row.image
+        ? imageCache[row.image]
+        : null;
+
+    drawImageContain(
+      spiritImage,
+      xOffset + 8,
+      yOffset + 8,
+      75,
+      rowHeight - 16
+    );
+
+
+    /*
+    NOM DE L'ESPRIT
+    */
+
+    ctx.fillStyle =
+      "#ffffff";
+
+    ctx.font =
+      "bold 15px Arial";
+
+    ctx.textAlign =
+      "left";
+
+    ctx.fillText(
+      row.name,
+      xOffset + 90,
+      yOffset +
+        rowHeight / 2 +
+        5
+    );
+
+    xOffset +=
+      columnWidths[0];
+
+
+    /*
+    ================================================
+    VARIANTES
+    ================================================
+    */
+
+    columns
+      .slice(1)
+      .forEach(
+        (column, colIndex) => {
+
+          const variant =
+            row.variants[column];
+
+
+          /*
+          ==========================================
+          VARIANTE INEXISTANTE
+          ==========================================
+          */
+
+          if (!variant) {
+
+            ctx.fillStyle =
+              rowBackground;
+
+            ctx.fillRect(
+              xOffset,
+              yOffset,
+              columnWidths[
+                colIndex + 1
+              ],
+              rowHeight
+            );
 
             ctx.strokeStyle =
-              "#315b8f";
-
+              "#1b3b65";
 
             ctx.strokeRect(
               xOffset,
@@ -2049,17 +2036,223 @@ ctx.fillText(
               rowHeight
             );
 
-
             xOffset +=
               columnWidths[
                 colIndex + 1
               ];
 
-          }
-        );
+            return;
 
-    }
-  );
+          }
+
+
+          /*
+          ==========================================
+          COULEUR SELON LE STATUT
+          ==========================================
+          */
+
+          let background =
+            "#0f172a";
+
+          let statusSymbol =
+            "○";
+
+          let statusColor =
+            "#94a3b8";
+
+
+          if (
+            variant.status === 1
+          ) {
+
+            background =
+              "rgba(16,185,129,0.75)";
+
+            statusSymbol =
+              "✓";
+
+            statusColor =
+              "#10b981";
+
+          }
+
+
+          else if (
+            variant.status === 2
+          ) {
+
+            background =
+              "rgba(251,191,36,0.80)";
+
+            statusSymbol =
+              "★";
+
+            statusColor =
+              "#fbbf24";
+
+          }
+
+
+          else if (
+            variant.status === 3
+          ) {
+
+            background =
+              "rgba(220,38,38,0.80)";
+
+            statusSymbol =
+              "✗";
+
+            statusColor =
+              "#dc2626";
+
+          }
+
+
+          /*
+          ==========================================
+          FOND DE LA CASE
+          ==========================================
+          */
+
+          ctx.fillStyle =
+            background;
+
+          ctx.fillRect(
+            xOffset,
+            yOffset,
+            columnWidths[
+              colIndex + 1
+            ],
+            rowHeight
+          );
+
+
+          /*
+          ==========================================
+          IMAGE DE LA VARIANTE
+          ==========================================
+          */
+
+          const variantImage =
+            variant.image
+              ? imageCache[
+                  variant.image
+                ]
+              : null;
+
+          drawImageContain(
+            variantImage,
+            xOffset + 8,
+            yOffset + 5,
+            columnWidths[
+              colIndex + 1
+            ] - 16,
+            rowHeight - 10,
+            variant.status === 0
+              ? 0.75
+              : 1
+          );
+
+
+          /*
+          ==========================================
+          VOILE SOMBRE POUR NON OBTENU
+          ==========================================
+          */
+
+          if (
+            variant.status === 0
+          ) {
+
+            ctx.fillStyle =
+              "rgba(2,8,23,0.45)";
+
+            ctx.fillRect(
+              xOffset,
+              yOffset,
+              columnWidths[
+                colIndex + 1
+              ],
+              rowHeight
+            );
+
+          }
+
+
+          /*
+          ==========================================
+          PETIT INDICATEUR DE STATUT
+          ==========================================
+          */
+
+          ctx.fillStyle =
+            statusColor;
+
+          ctx.beginPath();
+
+          ctx.arc(
+            xOffset +
+              columnWidths[
+                colIndex + 1
+              ] - 22,
+            yOffset + 22,
+            12,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+
+
+          ctx.fillStyle =
+            "#ffffff";
+
+          ctx.font =
+            "bold 15px Arial";
+
+          ctx.textAlign =
+            "center";
+
+          ctx.fillText(
+            statusSymbol,
+            xOffset +
+              columnWidths[
+                colIndex + 1
+              ] - 22,
+            yOffset + 27
+          );
+
+
+          /*
+          ==========================================
+          BORDURE
+          ==========================================
+          */
+
+          ctx.strokeStyle =
+            "#315b8f";
+
+          ctx.strokeRect(
+            xOffset,
+            yOffset,
+            columnWidths[
+              colIndex + 1
+            ],
+            rowHeight
+          );
+
+
+          xOffset +=
+            columnWidths[
+              colIndex + 1
+            ];
+
+        }
+      );
+
+  }
 
 
   /*
@@ -2070,7 +2263,7 @@ ctx.fillText(
 
   const footerY =
     tableY +
-    rowHeight +
+    headerHeight +
     rows.length *
     rowHeight;
 
@@ -2078,30 +2271,25 @@ ctx.fillText(
   ctx.textAlign =
     "center";
 
-
   ctx.fillStyle =
     "#bcdcff";
-
 
   ctx.font =
     "bold 16px Arial";
 
-
   ctx.fillText(
     "Esprits Fortnite — Collection Tracker",
     totalWidth / 2,
-    footerY + 45
+    footerY + 35
   );
-
 
   ctx.font =
     "14px Arial";
 
-
   ctx.fillText(
-    "Allez sur https://drolfoam.github.io/esprits-fortnite-tracker/",
+    "drolfoam.github.io/esprits-fortnite-tracker/",
     totalWidth / 2,
-    footerY + 75
+    footerY + 62
   );
 
 
@@ -2114,16 +2302,13 @@ ctx.fillText(
   const link =
     document.createElement("a");
 
-
   link.href =
     canvas.toDataURL(
       "image/png"
     );
 
-
   link.download =
     "esprits-collection.png";
-
 
   link.click();
 
