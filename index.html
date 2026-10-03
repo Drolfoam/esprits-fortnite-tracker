@@ -616,6 +616,13 @@ tr:hover {
           <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
         </tr>
 
+        <tr>
+          <td>Fouille-poubelle</td>
+          <td>Épique</td>
+          <td>La nourriture soigne davantage. Sortir d’un objet de cachette fait apparaître de la nourriture, et ouvrir des conteneurs a aussi une petite chance d’en donner. La nourriture s’améliore à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
 <tr>
   <td>Jack Rabbit</td>
   <td>Légendaire</td>
@@ -636,7 +643,7 @@ tr:hover {
   <td>Visez en plein air pour ralentir et gagner une précision améliorée. La précision augmente à chaque montée de niveau.</td>
   <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
 </tr>
-
+        
         <tr>
           <td>Crash Bandicoot</td>
           <td>Légendaire</td>
@@ -650,11 +657,33 @@ tr:hover {
           <td>Vous camoufle un court instant chaque fois que vous subissez des dégâts. La durée du camouflage augmente à chaque montée de niveau.</td>
           <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
 </tr>
+
+        <tr>
+          <td>Cerf</td>
+          <td>Légendaire</td>
+          <td>Les attaques de mêlée infligent plus de dégâts — encore plus à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <td>Vampire</td>
+          <td>Légendaire</td>
+          <td>Infliger des dégâts à un ennemi te rend une partie de ta santé. La part récupérée augmente à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+    </tr>
+
+        <tr>
+  <td>Ruée spectrale</td>
+  <td>Mythique</td>
+  <td>Saute en l’air pour foncer et traverser certains objets, en dépensant une charge qui se recharge avec le temps. Le temps de recharge diminue à chaque montée de niveau.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        
 <tr>
   <td>Couronne</td>
   <td>Mythique</td>
   <td>Ne monte de niveau qu’en gagnant des parties — plus vite avec des Victoires couronnées. Le maîtriser débloque de nouvelles variantes.</td>
-  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Chasseur de prime</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Chasseur de prime, Un bonbon ou un sort</td>
 </tr>
 
         <tr>
@@ -837,6 +866,17 @@ const spirits = [
   },
 
   {
+    name: "Fouille-poubelle",
+    variants: [
+      ["Normal", "images/dumpsterdive_basic.webp"],
+      ["Or", "images/dumpsterdive_gold.webp"],
+      ["Roi de la triche", "images1/dumpsterdive_cheatmaster.webp"],
+      ["Pirate des butins", "images/dumpsterdive_loothacker.webp"],
+      ["Chasseur de prime", "images/dumpsterdive_bountyhunter.webp"]
+    ]
+  },
+
+  {
     name: "Jack Rabbit",
     variants: [
       ["Normal", "images/jackrabbit_basic.webp"],
@@ -892,13 +932,46 @@ const spirits = [
   },
 
   {
+    name: "Cerf",
+    variants: [
+      ["Normal", "images/thedeer_basic.webp"],
+      ["Or", "images/thedeer_gold.webp"],
+      ["Roi de la triche", "images1/thedeer_cheatmaster.webp"],
+      ["Pirate des butins", "images/thedeer_loothacker.webp"],
+      ["Chasseur de prime", "images/thedeer_bountyhunter.webp"]
+    ]
+  },
+
+  {
+    name: "Vampire",
+    variants: [
+      ["Normal", "images/vampire_basic.webp"],
+      ["Or", "images/vampire_gold.webp"],
+      ["Roi de la triche", "images1/vampire_cheatmaster.webp"],
+      ["Pirate des butins", "images/vampire_loothacker.webp"],
+      ["Chasseur de prime", "images/vampire_bountyhunter.webp"]
+    ]
+  },
+
+    name: "Ruée spectrale",
+    variants: [
+      ["Normal", "images/spookydash_basic.webp"],
+      ["Or", "images/spookydash_gold.webp"],
+      ["Roi de la triche", "images1/spookydash_cheatmaster.webp"],
+      ["Pirate des butins", "images/spookydash_loothacker.webp"],
+      ["Chasseur de prime", "images/spookydash_bountyhunter.webp"]
+    ]
+  },
+
+  {
     name: "Couronne",
     variants: [
       ["Normal", "images/crown_basic.webp"],
       ["Or", "images/crown_gold.webp"],
       ["Roi de la triche", "images1/crown_cheatmaster.webp"],
       ["Pirate des butins", "images/crown_loothacker.webp"],
-      ["Chasseur de prime", "images/T_Icon_BR_Creature_Sprite_Crown_BountyHunter_L.webp"]
+      ["Chasseur de prime", "images/T_Icon_BR_Creature_Sprite_Crown_BountyHunter_L.webp"],
+      ["Un bonbon ou un sort", "images/crown_tricktreat.webp"]
     ]
   },
 
