@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Tracker Esprits Fortnite</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      color: white;
+      background:
+        radial-gradient(circle at top, #1e6eff 0%, transparent 35%),
+        linear-gradient(135deg, #06132f, #071d4d 50%, #020817);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px #4da3ff;
+    }
+
+    header p {
+      color: #bcdcff;
+      font-size: 17px;
+    }
+
+    .top-panel {
+      max-width: 1200px;
+      margin: 0 auto 25px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(7, 29, 77, 0.75);
+      border: 1px solid rgba(100, 180, 255, 0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      color: #a9cfff;
+      font-size: 14px;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 14px;
+      background: #07152e;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;ll.
+      background: linear-gradient(90deg, #00aaff, #00eaff);
+      transition: width 0.3s;
+    }
+
+    #masterBadge {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 210, 0, 0.15);
+      border: 1px solid #ffd000;
+      color: #ffe46b;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      color: white;
+      background: #1265d8;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #1978f5;
+    }
+
+    .search-container {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+    }
+
+    #search {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(100, 180, 255, 0.3);
+      background: rgba(4, 17, 42, 0.85);
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #search::placeholder {
+      color: #8caed8;
+    }
+
+    .legend {
+      max-width: 1200px;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legend span {
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(5, 20, 50, 0.6);
+      color: #bcdcff;
+      font-size: 14px;
+    }
+
+    .sprite-section {
+      max-width: 1200px;
+      margin: 35px auto;
+    }
+
+    .sprite-section h2 {
+      margin-bottom: 15px;
+      font-size: 24px;
+      color: #d9edff;
+    }
+
+    .variants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+    }
+
+    .variant-card {
+      min-height: 190px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(8, 32, 78, 0.8);
+      border: 2px solid rgba(100, 180, 255, 0.15);
+      cursor: pointer;
+      user-select: none;
+      transition: 0.25s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .variant-card:hover {
+      transform: translateY(-5px);
+      border-color: #3296ff;
+      box-shadow: 0 10px 30px rgba(0, 130, 255, 0.25);
+    }
+
+    .variant-image {
+      width: 100%;
+      height: 115px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .fallback-image {
+      width: 100%;
+      height: 115px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 55px;
+    }
+
+    .variant-name {
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .status {
+      margin-top: 7px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .status-obtenu {
+      border-color: #20d66b;
+      background: rgba(20, 130, 70, 0.25);
+    }
+
+    .status-obtenu .status {
+      color: #43f58b;
+    }
+
+    .status-maitrise {
+      border-color: #ffd000;
+      background: rgba(150, 115, 0, 0.25);
+    }
+
+    .status-maitrise .status {
+      color: #ffe04d;
+    }
+
+    .status-perdu {
+      border-color: #ff4040;
+      background: rgba(150, 20, 20, 0.25);
+    }
+
+    .status-perdu .status {
+      color: #ff6868;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 10px 20px;
+      color: #7192bd;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 30px;
+      }
+
+      body {
+        padding: 10px;
+      }
+
+      .variants-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .variant-card {
+        min-height: 160px;
+      }
+
+      .variant-image,
+      .fallback-image {
+        height: 90px;
+      }
+
+      .info-section {
+  max-width: 1200px;
+  margin: 50px auto;
+}
+
+.info-description {
+  color: #bcdcff;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: rgba(8, 32, 78, 0.8);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+th {
+  background: #1265d8;
+  padding: 12px;
+  color: white;
+}
+
+td {
+  padding: 12px;
+  color: #d9edff;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  word-wrap: break-word;
+  vertical-align: top;
+}
+
+
+/* Largeur des colonnes */
+
+th:nth-child(1),
+td:nth-child(1) {
+  width: 12%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 10%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 32%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 30%;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 16%;
+}
+
+
+tr:hover {
+  background: rgba(50,150,255,0.15);
+}
+    }
+
+    .image-error {
+  display: none;
+  width: 100%;
+  height: 115px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+    .discord-button {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #5865F2;
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+      .discord-button svg {
+  width: 18px !important;
+  height: 18px !important;
+    }
+    
+
+/* Connexion et sauvegarde cloud */
+.auth-panel {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(7, 29, 77, 0.88);
+  border: 1px solid rgba(100, 180, 255, 0.35);
+}
+.auth-panel h2 { font-size: 21px; margin-bottom: 10px; color: #d9edff; }
+.auth-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.auth-row input {
+  flex: 1 1 190px; min-width: 0; padding: 12px;
+  border-radius: 10px; border: 1px solid #477bb7;
+  background: #06132f; color: white; font-size: 15px;
+}
+.auth-message { margin-top: 10px; color: #bcdcff; overflow-wrap: anywhere; }
+.auth-email { color: #7fffb0; }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>👻 Esprits Fortnite</h1>
+  <p>Collectionne, maîtrise et suis tous tes esprits.</p>
+
+  <div style="
+  margin-top: 15px;
+  text-align: center;
+  color: #ff3030;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+">
+  👉SITE FONCTIONNEL👈
+  </div>
+
+  <div style="
+  margin-top: 8px;
+  text-align: center;
+  color: #bcdcff;
+  font-size: 15px;
+">
+  📱 Si vous êtes sur téléphone, passez le site en mode ordinateur pour une meilleure expérience.
+  </div>
+</header>
+
+
+<section class="auth-panel">
+  <h2>☁️ Sauvegarder ma collection</h2>
+  <p style="color:#bcdcff; margin-bottom:12px;">Crée un compte ou connecte-toi pour retrouver tes esprits sur tes autres appareils.</p>
+  <div class="auth-row" id="authForm">
+    <input id="authEmail" type="email" autocomplete="email" placeholder="Adresse e-mail" aria-label="Adresse e-mail">
+    <input id="authPassword" type="password" autocomplete="current-password" placeholder="Mot de passe (6 caractères minimum)" aria-label="Mot de passe">
+    <button type="button" id="signInButton">Se connecter</button>
+    <button type="button" id="signUpButton">Créer un compte</button>
+  </div>
+  <div class="auth-row" id="signedInPanel" style="display:none;">
+    <span>Connecté : <strong class="auth-email" id="signedInEmail"></strong></span>
+    <button type="button" id="signOutButton">Se déconnecter</button>
+  </div>
+  <p class="auth-message" id="authMessage" role="status">Configuration Supabase requise avant la connexion.</p>
+</section>
+
+<section class="top-panel">
+
+  <div class="stats">
+
+    <div class="stat">
+      <div class="stat-number" id="obtainedCount">0</div>
+      <div class="stat-label">Obtenus</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-number" id="masteredCount">0</div>
+      <div class="stat-label">Maîtrisés</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-number" id="lostCount">0</div>
+      <div class="stat-label">Perdus</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-number" id="totalCount">0</div>
+      <div class="stat-label">Total</div>
+    </div>
+
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <p style="text-align:center; color:#bcdcff;">
+    Collection : <span id="progressText">0 / 0</span>
+  </p>
+
+  <div id="masterBadge">
+    👑 MAÎTRE DES ESPRITS — Tu as obtenu tous les esprits !
+  </div>
+
+  <div class="actions">
+
+    <button onclick="exportImage()">
+      📸 Exporter l'image
+    </button>
+
+    <button onclick="resetCollection()">
+      🔄 Réinitialiser
+    </button>
+
+<a href="https://discord.gg/CaBMys2m7G" target="_blank" class="discord-button" aria-label="Rejoindre le serveur Discord">
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path fill="currentColor" d="M20.317 4.37a19.8 19.8 0 0 0-4.885-1.515c-.213.385-.456.905-.627 1.31a18.27 18.27 0 0 0-5.61 0c-.171-.405-.42-.925-.63-1.31A19.736 19.736 0 0 0 3.677 4.37C.533 9.055-.319 13.625.106 18.134a19.9 19.9 0 0 0 5.993 3.03c.49-.665.926-1.372 1.304-2.117a12.9 12.9 0 0 1-2.05-.988c.172-.127.34-.26.504-.397 3.956 1.793 8.24 1.793 12.15 0 .165.137.333.27.505.397-.654.38-1.34.713-2.05.988.378.745.814 1.452 1.304 2.117a19.9 19.9 0 0 0 5.993-3.03c.5-5.229-.857-9.76-3.442-13.764ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.201 0 2.176 1.085 2.157 2.418 0 1.334-.956 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.201 0 2.176 1.085 2.157 2.418 0 1.334-.956 2.419-2.157 2.419Z"/>
+</svg>
+</a>
+
+  </div>
+
+</section>
+
+<div class="search-container">
+
+  <input
+    type="text"
+    id="search"
+    placeholder="🔎 Rechercher un esprit ou une variante..."
+    oninput="displaySpirits()"
+  >
+
+</div>
+
+<div class="legend">
+
+  <span>⚪ Non obtenu</span>
+  <span>🟢 Obtenu</span>
+  <span>🟡 Maîtrisé</span>
+  <span>🔴 Perdu</span>
+
+</div>
+
+<main id="spiritsContainer"></main>
+
+  <section class="info-section">
+
+  <h2>Guide des sprites Fortnite</h2>
+
+  <p class="info-description">
+    Tous les sprites, leur rareté, leur capacité, où les trouver et leurs variantes.
+  </p>
+
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Esprit</th>
+          <th>Rareté</th>
+          <th>Capacité</th>
+          <th>Variantes</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>Buisson</td>
+          <td>Rare</td>
+          <td>Vous octroie un buisson après un certain temps ; au niveau maximum, vous gagnez aussi un buisson à chaque élimination. L’attente entre les buissons se réduit à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Aventure</td>
+          <td>Rare</td>
+          <td>Améliore un objet aléatoire de votre inventaire à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>8-Bit</td>
+          <td>Rare</td>
+          <td>Place un Fusil à pompe 8-Bit dans votre premier coffre et vous accorde un multiplicateur de score pour celui-ci.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Jonesy</td>
+          <td>Rare</td>
+          <td>Récupère un peu de santé ou de bouclier peu après que vous avez subi des dégâts. La quantité soignée augmente à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Éclaireur de tempête</td>
+          <td>Rare</td>
+          <td>Déclenche la Surmultiplication après que vous avez subi assez de dégâts de la Tempête — il en faut moins à chaque montée de niveau. Au niveau maximum, il révèle les futurs cercles de la Tempête.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Mega Man</td>
+          <td>Rare</td>
+          <td>Réduit la friction en glissade ou à la nage — vous glissez plus loin à chaque montée de niveau.</td>
+          <td>Normal</td>
+        </tr>
+
+        <tr>
+          <td>Anniversaire</td>
+          <td>Rare</td>
+          <td>Ouvrir un coffre peut faire apparaître une part de gâteau, et au niveau max les éliminations aussi. La chance de gâteau augmente à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Onigiri</td>
+          <td>Rare</td>
+          <td>Déclenche la Surcharge après avoir mangé ou bu un consommable ; elle dure plus longtemps à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Sonic</td>
+          <td>Épique</td>
+          <td>Gotta go fast — sprintez plus vite à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+                <tr>
+  <td>Tails</td>
+  <td>Épique</td>
+  <td>Faites un double saut pour rester en vol stationnaire grâce à Tails. La vitesse de vol augmente à chaque montée de niveau.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+</tr>
+
+<tr>
+  <td>Shadow</td>
+  <td>Épique</td>
+  <td>Recharge automatiquement vos armes non équipées au fil du temps, plus vite à chaque montée de niveau. Au niveau maximum, il recharge aussi votre arme équipée.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+</tr>
+
+        <tr>
+          <td>Surbouclier</td>
+          <td>Épique</td>
+          <td>Accorde un surbouclier qui grandit à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Étang</td>
+          <td>Épique</td>
+          <td>Sautez juste après l’atterrissage pour déclencher un super saut, en dépensant une charge qui se régénère avec le temps. La puissance du saut augmente et le temps de recharge diminue à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Morgana</td>
+          <td>Épique</td>
+          <td>Rend les objets de soin plus efficaces — encore plus à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <tr>
+          <td>Fouille-poubelle</td>
+          <td>Épique</td>
+          <td>La nourriture soigne davantage. Sortir d’un objet de cachette fait apparaître de la nourriture, et ouvrir des conteneurs a aussi une petite chance d’en donner. La nourriture s’améliore à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+<tr>
+  <td>Jack Rabbit</td>
+  <td>Légendaire</td>
+  <td>Accorde un second saut en plein air. Le délai entre les sauts se réduit à chaque montée de niveau.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+</tr>
+
+<tr>
+  <td>X-Ray</td>
+  <td>Légendaire</td>
+  <td>Marque périodiquement les ennemis autour de vous — le rayon de détection augmente à chaque montée de niveau.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+</tr>
+
+<tr>
+  <td>Killswitch</td>
+  <td>Légendaire</td>
+  <td>Visez en plein air pour ralentir et gagner une précision améliorée. La précision augmente à chaque montée de niveau.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+</tr>
+        
+        <tr>
+          <td>Crash Bandicoot</td>
+          <td>Légendaire</td>
+          <td>Sautez en l’air pour déclencher une attaque tourbillon qui blesse et repousse les ennemis proches. Les dégâts augmentent et le temps de recharge diminue à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+<tr>
+          <td>Blinky</td>
+          <td>Légendaire</td>
+          <td>Vous camoufle un court instant chaque fois que vous subissez des dégâts. La durée du camouflage augmente à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+</tr>
+
+        <tr>
+          <td>Cerf</td>
+          <td>Légendaire</td>
+          <td>Les attaques de mêlée infligent plus de dégâts — encore plus à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        <td>Vampire</td>
+          <td>Légendaire</td>
+          <td>Infliger des dégâts à un ennemi te rend une partie de ta santé. La part récupérée augmente à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+    </tr>
+
+        <tr>
+  <td>Ruée spectrale</td>
+  <td>Mythique</td>
+  <td>Saute en l’air pour foncer et traverser certains objets, en dépensant une charge qui se recharge avec le temps. Le temps de recharge diminue à chaque montée de niveau.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
+        
+<tr>
+  <td>Couronne</td>
+  <td>Mythique</td>
+  <td>Ne monte de niveau qu’en gagnant des parties — plus vite avec des Victoires couronnées. Le maîtriser débloque de nouvelles variantes.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Chasseur de prime, Un bonbon ou un sort</td>
+</tr>
+
+        <tr>
+          <td>✨Klombo</td>
+          <td>Mythique</td>
+          <td>Accorde des objets aléatoires à chaque niveau et ne monte de niveau qu’en consommant des objets. La qualité des objets s’améliore à chaque montée de niveau.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+        
+      </tbody>
+
+    </table>
+
+  </div>
+
+  </section>
+
+<footer>
+  Esprits Fortnite — Collection Tracker
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+
+<script>
+
+// --- Connexion Supabase : les valeurs viennent de supabase-config.js ---
+let supabaseClient = null;
+let currentUserId = null;
+let cloudReady = false;
+let cloudSaveTimer = null;
+let lastHandledUserId = null;
+
+const authMessage = () => document.getElementById("authMessage");
+function showAuthMessage(message, isError = false) {
+  const el = authMessage();
+  if (!el) return;
+  el.textContent = message;
+  el.style.color = isError ? "#ff9a9a" : "#bcdcff";
+}
+function updateAuthUI(user) {
+  const form = document.getElementById("authForm");
+  const signed = document.getElementById("signedInPanel");
+  if (user) {
+    form.style.display = "none";
+    signed.style.display = "flex";
+    document.getElementById("signedInEmail").textContent = user.email || "Compte connecté";
+  } else {
+    form.style.display = "flex";
+    signed.style.display = "none";
+    document.getElementById("signedInEmail").textContent = "";
+  }
+}
+function initializeSupabase() {
+  const cfg = window.SUPABASE_CONFIG;
+  if (!window.supabase || !cfg || !cfg.url || !cfg.anonKey ||
+      cfg.url.includes("COLLE_ICI") || cfg.anonKey.includes("COLLE_ICI")) {
+    showAuthMessage("Il reste à configurer l’URL et la clé publique dans supabase-config.js.");
+    return;
+  }
+  try {
+    supabaseClient = window.supabase.createClient(cfg.url, cfg.anonKey);
+    showAuthMessage("Supabase configuré. Tu peux créer un compte ou te connecter.");
+    document.getElementById("signInButton").addEventListener("click", signInWithEmail);
+    document.getElementById("signUpButton").addEventListener("click", signUpWithEmail);
+    document.getElementById("signOutButton").addEventListener("click", signOutUser);
+    supabaseClient.auth.getSession().then(({data, error}) => {
+      if (error) showAuthMessage(error.message, true);
+      else if (data.session) handleSignedInUser(data.session.user);
+    });
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (session && session.user) {
+        // Laisser le callback d'auth se terminer avant les requêtes de données.
+        setTimeout(() => handleSignedInUser(session.user), 0);
+      } else if (event === "SIGNED_OUT") {
+        currentUserId = null;
+        cloudReady = false;
+        lastHandledUserId = null;
+        updateAuthUI(null);
+        showAuthMessage("Déconnecté. Ta collection sauvegardée dans le cloud reste dans ton compte.");
+      }
+    });
+  } catch (e) {
+    showAuthMessage("Configuration Supabase invalide : vérifie l’URL et la clé publique.", true);
+  }
+}
+async function signInWithEmail() {
+  if (!supabaseClient) return showAuthMessage("Configure d’abord supabase-config.js.", true);
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  if (!email || !password) return showAuthMessage("Entre ton e-mail et ton mot de passe.", true);
+  const {data, error} = await supabaseClient.auth.signInWithPassword({email, password});
+  if (error) showAuthMessage(error.message, true);
+  else if (data.user) await handleSignedInUser(data.user);
+}
+async function signUpWithEmail() {
+  if (!supabaseClient) return showAuthMessage("Configure d’abord supabase-config.js.", true);
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  if (!email || !password) return showAuthMessage("Entre ton e-mail et choisis un mot de passe.", true);
+  if (password.length < 6) return showAuthMessage("Le mot de passe doit contenir au moins 6 caractères.", true);
+  const {data, error} = await supabaseClient.auth.signUp({email, password});
+  if (error) showAuthMessage(error.message, true);
+  else if (data.session && data.user) {
+    await handleSignedInUser(data.user);
+  } else {
+    showAuthMessage("Compte créé ! Vérifie ta boîte e-mail pour confirmer ton adresse, puis connecte-toi.");
+  }
+}
+async function signOutUser() {
+  if (!supabaseClient) return;
+  const {error} = await supabaseClient.auth.signOut();
+  if (error) showAuthMessage(error.message, true);
+}
+async function handleSignedInUser(user) {
+  if (!supabaseClient || !user || lastHandledUserId === user.id && cloudReady) return;
+  currentUserId = user.id;
+  cloudReady = false;
+  lastHandledUserId = user.id;
+  updateAuthUI(user);
+  showAuthMessage("Connexion réussie. Chargement de ta collection…");
+  const {data, error} = await supabaseClient
+    .from("esprits_collection")
+    .select("collection")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (error) {
+    cloudReady = false;
+    showAuthMessage("Connexion réussie, mais impossible de charger la collection. Vérifie la table et les règles RLS : " + error.message, true);
+    return;
+  }
+  if (data && data.collection && typeof data.collection === "object") {
+    collection = data.collection;
+    localStorage.setItem("espritsCollection", JSON.stringify(collection));
+    showAuthMessage("Collection chargée depuis le cloud. Tes changements seront sauvegardés automatiquement.");
+  } else {
+    // Première connexion : importer la collection locale existante dans le compte.
+    const localCollection = JSON.parse(localStorage.getItem("espritsCollection") || "{}");
+    collection = localCollection;
+    const {error: insertError} = await supabaseClient.from("esprits_collection").upsert({
+      user_id: user.id,
+      collection: collection,
+      updated_at: new Date().toISOString()
+    }, {onConflict: "user_id"});
+    if (insertError) {
+      showAuthMessage("Impossible d’enregistrer la collection initiale : " + insertError.message, true);
+      return;
+    }
+    showAuthMessage("Collection locale importée dans ton compte. La sauvegarde automatique est activée.");
+  }
+  cloudReady = true;
+  localStorage.setItem("espritsCollection", JSON.stringify(collection));
+  displaySpirits();
+  updateStats();
+}
+async function saveCollectionToCloud() {
+  if (!supabaseClient || !currentUserId || !cloudReady) return;
+  const snapshot = JSON.parse(JSON.stringify(collection));
+  const {error} = await supabaseClient.from("esprits_collection").upsert({
+    user_id: currentUserId,
+    collection: snapshot,
+    updated_at: new Date().toISOString()
+  }, {onConflict: "user_id"});
+  if (error) showAuthMessage("Sauvegarde cloud impossible : " + error.message, true);
+  else showAuthMessage("☁️ Collection sauvegardée automatiquement.");
+}
+
+
+/*
+====================================================
+LISTE DES ESPRITS
+====================================================
+*/
+
+const spirits = [
+
+  {
+    name: "Buisson",
+    variants: [
+      ["Normal", "images/bush_basic.webp"],
+      ["Or", "images/bush_gold.webp"],
+      ["Roi de la triche", "images1/bush_cheatmaster.webp"],
+      ["Pirate des butins", "images/bush_loothacker.webp"],
+      ["Chasseur de prime", "images/bush_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/bush_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Aventure",
+    variants: [
+      ["Normal", "images/adventure_basic.webp"],
+      ["Or", "images/adventure_gold.webp"],
+      ["Roi de la triche", "images1/adventure_cheatmaster.webp"],
+      ["Pirate des butins", "images/adventure_loothacker.webp"],
+      ["Chasseur de prime", "images/adventure_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/adventure_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "8-Bit",
+    variants: [
+      ["Normal", "images/eightbit_basic.webp"],
+      ["Or", "images/eightbit_gold.webp"],
+      ["Roi de la triche", "images1/eightbit_cheatmaster.webp"],
+      ["Pirate des butins", "images/eightbit_loothacker.webp"],
+      ["Chasseur de prime", "images/eightbit_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/eightbit_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Jonesy",
+    variants: [
+      ["Normal", "images/jonesy_basic.webp"],
+      ["Or", "images/jonesy_gold.webp"],
+      ["Roi de la triche", "images1/jonesy_cheatmaster.webp"],
+      ["Pirate des butins", "images/jonesy_loothacker.webp"],
+      ["Chasseur de prime", "images/jonesy_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/jonesy_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Éclaireur de tempête",
+    variants: [
+      ["Normal", "images/stormscout_basic.webp"],
+      ["Or", "images/stormscout_gold.webp"],
+      ["Roi de la triche", "images1/stormscout_cheatmaster.webp"],
+      ["Pirate des butins", "images/stormscout_loothacker.webp"],
+      ["Chasseur de prime", "images/stormscout_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/stormscout_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Mega Man",
+    variants: [
+      ["Normal", "images/megaman_basic.webp"]
+    ]
+  },
+
+  {
+    name: "Anniversaire",
+    variants: [
+      ["Normal", "images/birthday_basic.webp"],
+      ["Or", "images/birthday_gold.webp"],
+      ["Roi de la triche", "images1/birthday_cheatmaster.webp"],
+      ["Pirate des butins", "images/birthday_loothacker.webp"],
+      ["Chasseur de prime", "images/birthday_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/birthday_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Onigiri",
+    variants: [
+      ["Normal", "images/onigiri_basic.webp"],
+      ["Or", "images/onigiri_gold.webp"],
+      ["Roi de la triche", "images1/onigiri_cheatmaster.webp"],
+      ["Pirate des butins", "images/onigiri_loothacker.webp"],
+      ["Chasseur de prime", "images/onigiri_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/onigiri_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Sonic",
+    variants: [
+      ["Normal", "images/sonic_basic.webp"],
+      ["Or", "images/sonic_gold.webp"],
+      ["Roi de la triche", "images1/sonic_cheatmaster.webp"],
+      ["Pirate des butins", "images/sonic_loothacker.webp"],
+      ["Chasseur de prime", "images/sonic_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/sonic_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Tails",
+    variants: [
+      ["Normal", "images/tails_basic.webp"],
+      ["Or", "images/tails_gold.webp"],
+      ["Roi de la triche", "images1/tails_cheatmaster.webp"],
+      ["Pirate des butins", "images/tails_loothacker.webp"],
+      ["Chasseur de prime", "images/tails_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/tails_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Shadow",
+    variants: [
+      ["Normal", "images/shadow_basic.webp"],
+      ["Or", "images/shadow_gold.webp"],
+      ["Roi de la triche", "images1/shadow_cheatmaster.webp"],
+      ["Pirate des butins", "images/shadow_loothacker.webp"],
+      ["Chasseur de prime", "images/shadow_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/shadow_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Overshield",
+    variants: [
+      ["Normal", "images/overshield_basic.webp"],
+      ["Or", "images/overshield_gold.webp"],
+      ["Roi de la triche", "images1/overshield_cheatmaster.webp"],
+      ["Pirate des butins", "images/overshield_loothacker.webp"],
+      ["Chasseur de prime", "images/overshield_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/overshield_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Étang",
+    variants: [
+      ["Normal", "images/pond_basic.webp"],
+      ["Or", "images/pond_gold.webp"],
+      ["Roi de la triche", "images1/pond_cheatmaster.webp"],
+      ["Pirate des butins", "images/pond_loothacker.webp"],
+      ["Chasseur de prime", "images/pond_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/pond_tricktreat.webp"]
+      ]
+  },
+
+  {
+    name: "Morgana",
+    variants: [
+      ["Normal", "images/morgana_basic.webp"],
+      ["Or", "images/morgana_gold.webp"],
+      ["Roi de la triche", "images1/morgana_cheatmaster.webp"],
+      ["Pirate des butins", "images/morgana_loothacker.webp"],
+      ["Chasseur de prime", "images/morgana_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/morgana_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Fouille-poubelle",
+    variants: [
+      ["Normal", "images/dumpsterdive_basic.webp"],
+      ["Or", "images/dumpsterdive_gold.webp"],
+      ["Roi de la triche", "images1/dumpsterdive_cheatmaster.webp"],
+      ["Pirate des butins", "images/dumpsterdive_loothacker.webp"],
+      ["Chasseur de prime", "images/dumpsterdive_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/dumpsterdive_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Jack Rabbit",
+    variants: [
+      ["Normal", "images/jackrabbit_basic.webp"],
+      ["Or", "images/jackrabbit_gold.webp"],
+      ["Roi de la triche", "images1/jackrabbit_cheatmaster.webp"],
+      ["Pirate des butins", "images/jackrabbit_loothacker.webp"],
+      ["Chasseur de prime", "images/jackrabbit_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/jackrabbit_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "X-Ray",
+    variants: [
+      ["Normal", "images/xray_basic.webp"],
+      ["Or", "images/xray_gold.webp"],
+      ["Roi de la triche", "images1/xray_cheatmaster.webp"],
+      ["Pirate des butins", "images/xray_loothacker.webp"],
+      ["Chasseur de prime", "images/xray_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/xray_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Killswitch",
+    variants: [
+      ["Normal", "images/killswitch_basic.webp"],
+      ["Or", "images/killswitch_gold.webp"],
+      ["Roi de la triche", "images1/killswitch_cheatmaster.webp"],
+      ["Pirate des butins", "images/killswitch_loothacker.webp"],
+      ["Chasseur de prime", "images/killswitch_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/killswitch_tricktreat.webp"]
+    ]
+  },
+
+{
+    name: "Blinky",
+    variants: [
+      ["Normal", "images/blinky_basic.webp"],
+      ["Or", "images/blinky_gold.webp"],
+      ["Roi de la triche", "images1/blinky_cheatmaster.webp"],
+      ["Pirate des butins", "images/blinky_loothacker.webp"],
+      ["Chasseur de prime", "images/blinky_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/blinky_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Crash Bandicoot",
+    variants: [
+      ["Normal", "images/crashbandicoot_basic.webp"],
+      ["Or", "images/crashbandicoot_gold.webp"],
+      ["Roi de la triche", "images1/crashbandicoot_cheatmaster.webp"],
+      ["Pirate des butins", "images/crashbandicoot_loothacker.webp"],
+      ["Chasseur de prime", "images/crashbandicoot_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/crashbandicoot_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Cerf",
+    variants: [
+      ["Normal", "images/thedeer_basic.webp"],
+      ["Or", "images/thedeer_gold.webp"],
+      ["Roi de la triche", "images1/thedeer_cheatmaster.webp"],
+      ["Pirate des butins", "images/thedeer_loothacker.webp"],
+      ["Chasseur de prime", "images/thedeer_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/thedeer_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Vampire",
+    variants: [
+      ["Normal", "images/vampire_basic.webp"],
+      ["Or", "images/vampire_gold.webp"],
+      ["Roi de la triche", "images1/vampire_cheatmaster.webp"],
+      ["Pirate des butins", "images/vampire_loothacker.webp"],
+      ["Chasseur de prime", "images/vampire_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/vampire_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Ruée spectrale",
+    variants: [
+      ["Normal", "images/spookydash_basic.webp"],
+      ["Or", "images/spookydash_gold.webp"],
+      ["Roi de la triche", "images1/spookydash_cheatmaster.webp"],
+      ["Pirate des butins", "images/spookydash_loothacker.webp"],
+      ["Chasseur de prime", "images/spookydash_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/spookydash_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "Couronne",
+    variants: [
+      ["Normal", "images/crown_basic.webp"],
+      ["Or", "images/crown_gold.webp"],
+      ["Roi de la triche", "images1/crown_cheatmaster.webp"],
+      ["Pirate des butins", "images/crown_loothacker.webp"],
+      ["Chasseur de prime", "images/crown_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/crown_tricktreat.webp"]
+    ]
+  },
+
+  {
+    name: "✨Klombo",
+    variants: [
+      ["Normal", "images/klombo_basic.webp"],
+      ["Or", "images/klombo_gold.webp"],
+      ["Roi de la triche", "images1/klombo_cheatmaster.webp"],
+      ["Pirate des butins", "images/klombo_loothacker.webp"],
+      ["Chasseur de prime", "images/klombo_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/klombo_tricktreat.webp"]
+    ]
+  }
+
+];
+  
+
+/*
+====================================================
+SAUVEGARDE
+====================================================
+*/
+
+let collection =
+  JSON.parse(
+    localStorage.getItem(
+      "espritsCollection"
+    )
+  ) || {};
+
+
+/*
+====================================================
+ID UNIQUE
+====================================================
+*/
+
+function getId(
+  spriteName,
+  variantName
+) {
+
+  return (
+    spriteName +
+    "_" +
+    variantName
+  )
+  .toLowerCase()
+  .replaceAll(" ", "_")
+  .replaceAll("é", "e")
+  .replaceAll("è", "e")
+  .replaceAll("ê", "e")
+  .replaceAll("à", "a")
+  .replaceAll(".", "");
+
+}
+
+
+/*
+====================================================
+SAUVEGARDE
+====================================================
+*/
+
+function saveCollection() {
+  // Garde une sauvegarde locale et envoie les changements au cloud si connecté.
+  localStorage.setItem("espritsCollection", JSON.stringify(collection));
+  if (currentUserId && cloudReady) {
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(saveCollectionToCloud, 400);
+  }
+}
+
+
+/*
+====================================================
+STATUT
+====================================================
+*/
+
+function getStatus(id) {
+
+  return collection[id] || 0;
+
+}
+
+
+function getStatusName(
+  status
+) {
+
+  if (status === 1) {
+
+    return "🟢 Obtenu";
+
+  }
+
+  if (status === 2) {
+
+    return "🟡 Maîtrisé";
+
+  }
+
+  if (status === 3) {
+
+    return "🔴 Perdu";
+
+  }
+
+  return "⚪ Non obtenu";
+
+}
+
+
+/*
+====================================================
+CLIC
+====================================================
+*/
+
+function clickVariant(id) {
+
+  let status =
+    getStatus(id);
+
+  status++;
+
+  if (status > 3) {
+
+    status = 0;
+
+  }
+
+  collection[id] =
+    status;
+
+  saveCollection();
+
+  displaySpirits();
+
+  updateStats();
+
+}
+
+
+/*
+====================================================
+AFFICHAGE
+====================================================
+*/
+
+function displaySpirits() {
+
+  const container =
+    document.getElementById(
+      "spiritsContainer"
+    );
+
+  const search =
+    document
+      .getElementById(
+        "search"
+      )
+      .value
+      .toLowerCase();
+
+  container.innerHTML = "";
+
+
+  spirits.forEach(
+    sprite => {
+
+      const filteredVariants =
+        sprite.variants.filter(
+          variant =>
+
+            sprite.name
+              .toLowerCase()
+              .includes(search)
+
+            ||
+
+            variant[0]
+              .toLowerCase()
+              .includes(search)
+
+        );
+
+
+      if (
+        filteredVariants.length === 0
+      ) {
+
+        return;
+
+      }
+
+
+      const section =
+        document.createElement(
+          "section"
+        );
+
+      section.className =
+        "sprite-section";
+
+
+      section.innerHTML = `
+
+        <h2>
+          ${sprite.name}
+        </h2>
+
+        <div
+          class="variants-grid"
+        ></div>
+
+      `;
+
+
+      const grid =
+        section.querySelector(
+          ".variants-grid"
+        );
+
+
+      filteredVariants.forEach(
+        variant => {
+
+          const variantName =
+            variant[0];
+
+          const image =
+            variant[1];
+
+          const id =
+            getId(
+              sprite.name,
+              variantName
+            );
+
+          const status =
+            getStatus(id);
+
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "variant-card";
+
+
+          if (
+            status === 1
+          ) {
+
+            card.classList.add(
+              "status-obtenu"
+            );
+
+          }
+
+
+          if (
+            status === 2
+          ) {
+
+            card.classList.add(
+              "status-maitrise"
+            );
+
+          }
+
+
+          if (
+            status === 3
+          ) {
+
+            card.classList.add(
+              "status-perdu"
+            );
+
+          }
+
+
+          if (image) {
+
+  imageHTML = `
+
+<img
+  class="variant-image"
+  src="${image}"
+  alt="${sprite.name} ${variantName}"
+  onerror="this.style.display='none'; this.parentElement.querySelector('.image-error').style.display='flex';"
+>
+
+  `;
+
+}
+
+else {
+
+  imageHTML = `
+
+    <div
+      class="fallback-image"
+    >
+      👻
+    </div>
+
+  `;
+
+}
+          
+          card.innerHTML = `
+
+            ${imageHTML}
+
+            <div class="variant-name">
+  ${
+    variantName === "Supprimé par Epic"
+      ? '<span style="color:#4da3ff;">Supprimé par Epic</span>'
+      : variantName
+  }
+</div>
+              ${variantName}
+            </div>
+
+            <div
+              class="status"
+            >
+              ${getStatusName(
+                status
+              )}
+            </div>
+
+          `;
+
+
+          card.addEventListener(
+            "click",
+            () =>
+              clickVariant(id)
+          );
+
+
+          grid.appendChild(
+            card
+          );
+
+        }
+      );
+
+
+      container.appendChild(
+        section
+      );
+
+    }
+  );
+
+}
+
+
+/*
+====================================================
+STATISTIQUES
+====================================================
+*/
+
+function updateStats() {
+
+  let total = 0;
+
+  let obtained = 0;
+
+  let mastered = 0;
+
+  let lost = 0;
+
+
+  spirits.forEach(
+    sprite => {
+
+      sprite.variants.forEach(
+        variant => {
+
+          total++;
+
+          const id =
+            getId(
+              sprite.name,
+              variant[0]
+            );
+
+
+          const status =
+            getStatus(id);
+
+
+          if (
+            status === 1
+          ) {
+
+            obtained++;
+
+          }
+
+
+          if (
+            status === 2
+          ) {
+
+            mastered++;
+
+          }
+
+
+          if (
+            status === 3
+          ) {
+
+            lost++;
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+  const collected =
+    obtained +
+    mastered +
+    lost;
+
+
+  const progress =
+    total === 0
+
+      ? 0
+
+      : Math.round(
+          (
+            collected /
+            total
+          ) * 100
+        );
+
+
+  document.getElementById(
+    "obtainedCount"
+  ).textContent =
+    obtained;
+
+
+  document.getElementById(
+    "masteredCount"
+  ).textContent =
+    mastered;
+
+
+  document.getElementById(
+    "lostCount"
+  ).textContent =
+    lost;
+
+
+  document.getElementById(
+    "totalCount"
+  ).textContent =
+    total;
+
+
+  document.getElementById(
+    "progressText"
+  ).textContent =
+
+    collected +
+    " / " +
+    total;
+
+
+  document.getElementById(
+    "progressBar"
+  ).style.width =
+
+    progress +
+    "%";
+
+
+  if (
+    collected === total
+  ) {
+
+    document.getElementById(
+      "masterBadge"
+    ).style.display =
+      "block";
+
+  }
+
+  else {
+
+    document.getElementById(
+      "masterBadge"
+    ).style.display =
+      "none";
+
+  }
+
+}
+
+
+/*
+====================================================
+RÉINITIALISATION
+====================================================
+*/
+
+function resetCollection() {
+
+  const confirmation =
+    confirm(
+      "Es-tu sûr de vouloir réinitialiser toute ta collection ?"
+    );
+
+
+  if (
+    !confirmation
+  ) {
+
+    return;
+
+  }
+
+
+  collection = {};
+
+  saveCollection();
+
+  displaySpirits();
+
+  updateStats();
+
+}
+
+
+/*
+====================================================
+EXPORTER LA COLLECTION EN IMAGE
+====================================================
+*/
+
+async function exportImage() {
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const scale = 2;
+
+  const padding = 40;
+  const titleHeight = 120;
+  const headerHeight = 90;
+  const rowHeight = 105;
+  const footerHeight = 90;
+
+  /*
+  ====================================================
+  COLONNES
+  ====================================================
+  */
+
+  const columns = [
+    "Esprits",
+    "Normal",
+    "Or",
+    "Roi de la triche",
+    "Pirate des butins",
+    "Chasseur de prime",
+    "Un bonbon ou un sort"
+  ];
+
+  const columnWidths = [
+    250,
+    170,
+    170,
+    220,
+    220,
+    220,
+    220
+  ];
+
+  const totalWidth =
+    columnWidths.reduce(
+      (sum, width) => sum + width,
+      0
+    ) + padding * 2;
+
+
+  /*
+  ====================================================
+  PRÉPARATION DES LIGNES
+  ====================================================
+  */
+
+  const rows = [];
+
+  spirits.forEach(sprite => {
+
+    const row = {
+      name: sprite.name,
+      image: sprite.variants[0]
+        ? sprite.variants[0][1]
+        : null,
+      variants: {}
+    };
+
+    sprite.variants.forEach(variant => {
+
+      const variantName = variant[0];
+
+      const id = getId(
+        sprite.name,
+        variantName
+      );
+
+      row.variants[variantName] = {
+        status: getStatus(id),
+        image: variant[1]
+      };
+
+    });
+
+    rows.push(row);
+
+  });
+
+
+  /*
+  ====================================================
+  HAUTEUR
+  ====================================================
+  */
+
+  const totalHeight =
+    padding * 2 +
+    titleHeight +
+    headerHeight +
+    rows.length * rowHeight +
+    footerHeight;
+
+
+  canvas.width = totalWidth * scale;
+  canvas.height = totalHeight * scale;
+
+  ctx.scale(scale, scale);
+
+
+  /*
+  ====================================================
+  FOND
+  ====================================================
+  */
+
+  const gradient =
+    ctx.createLinearGradient(
+      0,
+      0,
+      totalWidth,
+      totalHeight
+    );
+
+  gradient.addColorStop(
+    0,
+    "#06132f"
+  );
+
+  gradient.addColorStop(
+    0.5,
+    "#071d4d"
+  );
+
+  gradient.addColorStop(
+    1,
+    "#020817"
+  );
+
+  ctx.fillStyle = gradient;
+
+  ctx.fillRect(
+    0,
+    0,
+    totalWidth,
+    totalHeight
+  );
+
+
+  /*
+  ====================================================
+  CHARGER UNE IMAGE
+  ====================================================
+  */
+
+  function loadImage(src) {
+
+    return new Promise(resolve => {
+
+      if (!src) {
+        resolve(null);
+        return;
+      }
+
+      const img = new Image();
+
+      img.onload = () => resolve(img);
+
+      img.onerror = () => resolve(null);
+
+      img.src = new URL(src, document.baseURI).href;
+
+    });
+
+  }
+
+
+  /*
+  ====================================================
+  DESSINER UNE IMAGE ENTIÈREMENT DANS UNE CASE
+  ====================================================
+  */
+
+  function drawImageContain(
+    img,
+    x,
+    y,
+    width,
+    height,
+    opacity = 1
+  ) {
+
+    if (!img) return;
+
+    const ratio =
+      Math.min(
+        width / img.width,
+        height / img.height
+      );
+
+    const drawWidth =
+      img.width * ratio;
+
+    const drawHeight =
+      img.height * ratio;
+
+    const drawX =
+      x + (width - drawWidth) / 2;
+
+    const drawY =
+      y + (height - drawHeight) / 2;
+
+    ctx.save();
+
+    ctx.globalAlpha = opacity;
+
+    ctx.drawImage(
+      img,
+      drawX,
+      drawY,
+      drawWidth,
+      drawHeight
+    );
+
+    ctx.restore();
+
+  }
+
+
+  /*
+  ====================================================
+  CHARGER TOUTES LES IMAGES
+  ====================================================
+  */
+
+  const imageCache = {};
+
+  for (const row of rows) {
+
+    if (
+      row.image &&
+      !imageCache[row.image]
+    ) {
+
+      imageCache[row.image] =
+        await loadImage(row.image);
+
+    }
+
+    for (const variantName in row.variants) {
+
+      const image =
+        row.variants[variantName].image;
+
+      if (
+        image &&
+        !imageCache[image]
+      ) {
+
+        imageCache[image] =
+          await loadImage(image);
+
+      }
+
+    }
+
+  }
+
+
+  /*
+  ====================================================
+  TITRE
+  ====================================================
+  */
+
+  ctx.fillStyle = "#ffffff";
+
+  ctx.font =
+    "bold 36px Arial";
+
+  ctx.textAlign = "left";
+
+  ctx.fillText(
+    "👻 Ma collection d'esprits Fortnite",
+    padding,
+    padding + 42
+  );
+
+
+  /*
+  ====================================================
+  PROGRESSION
+  ====================================================
+  */
+
+  let total = 0;
+  let collected = 0;
+
+  spirits.forEach(sprite => {
+
+    sprite.variants.forEach(variant => {
+
+      total++;
+
+      const id = getId(
+        sprite.name,
+        variant[0]
+      );
+
+      if (getStatus(id) !== 0) {
+        collected++;
+      }
+
+    });
+
+  });
+
+
+  ctx.font =
+    "20px Arial";
+
+  ctx.fillStyle =
+    "#bcdcff";
+
+  ctx.fillText(
+    `Progression : ${collected} / ${total}`,
+    padding,
+    padding + 78
+  );
+
+
+  /*
+  ====================================================
+  LÉGENDE
+  ====================================================
+  */
+
+  const legendY =
+    padding + 104;
+
+  ctx.font =
+    "15px Arial";
+
+  ctx.textAlign =
+    "left";
+
+  function drawLegend(
+    x,
+    color,
+    text
+  ) {
+
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      x + 7,
+      legendY - 5,
+      7,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      "#bcdcff";
+
+    ctx.fillText(
+      text,
+      x + 20,
+      legendY
+    );
+
+  }
+
+  let legendX =
+    padding + 300;
+
+  drawLegend(
+    legendX,
+    "#94a3b8",
+    "Non obtenu"
+  );
+
+  legendX += 125;
+
+  drawLegend(
+    legendX,
+    "#10b981",
+    "Obtenu"
+  );
+
+  legendX += 95;
+
+  drawLegend(
+    legendX,
+    "#fbbf24",
+    "Maîtrisé"
+  );
+
+  legendX += 115;
+
+  drawLegend(
+    legendX,
+    "#dc2626",
+    "Perdu"
+  );
+
+
+  /*
+  ====================================================
+  TABLEAU
+  ====================================================
+  */
+
+  const tableY =
+    padding +
+    titleHeight;
+
+  let xOffset =
+    padding;
+
+
+  /*
+  ====================================================
+  EN-TÊTES
+  ====================================================
+  */
+
+  columns.forEach(
+    (column, index) => {
+
+      ctx.fillStyle =
+        "#1265d8";
+
+      ctx.fillRect(
+        xOffset,
+        tableY,
+        columnWidths[index],
+        headerHeight
+      );
+
+      ctx.strokeStyle =
+        "#4da3ff";
+
+      ctx.lineWidth = 1;
+
+      ctx.strokeRect(
+        xOffset,
+        tableY,
+        columnWidths[index],
+        headerHeight
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.font =
+        "bold 16px Arial";
+
+      ctx.textAlign =
+        "center";
+
+      ctx.fillText(
+        column,
+        xOffset +
+          columnWidths[index] / 2,
+        tableY +
+          headerHeight / 2 +
+          6
+      );
+
+      xOffset +=
+        columnWidths[index];
+
+    }
+  );
+
+
+  /*
+  ====================================================
+  LIGNES
+  ====================================================
+  */
+
+  for (
+    let rowIndex = 0;
+    rowIndex < rows.length;
+    rowIndex++
+  ) {
+
+    const row =
+      rows[rowIndex];
+
+    const yOffset =
+      tableY +
+      headerHeight +
+      rowIndex *
+      rowHeight;
+
+
+    /*
+    ================================================
+    ESPRIT
+    ================================================
+    */
+
+    let xOffset =
+      padding;
+
+    const rowBackground =
+      rowIndex % 2 === 0
+        ? "#0b2857"
+        : "#082044";
+
+    ctx.fillStyle =
+      rowBackground;
+
+    ctx.fillRect(
+      xOffset,
+      yOffset,
+      columnWidths[0],
+      rowHeight
+    );
+
+    ctx.strokeStyle =
+      "#315b8f";
+
+    ctx.strokeRect(
+      xOffset,
+      yOffset,
+      columnWidths[0],
+      rowHeight
+    );
+
+
+    /*
+    IMAGE DE L'ESPRIT
+    */
+
+    const spiritImage =
+      row.image
+        ? imageCache[row.image]
+        : null;
+
+    drawImageContain(
+      spiritImage,
+      xOffset + 8,
+      yOffset + 8,
+      75,
+      rowHeight - 16
+    );
+
+
+    /*
+    NOM DE L'ESPRIT
+    */
+
+    ctx.fillStyle =
+      "#ffffff";
+
+    ctx.font =
+      "bold 15px Arial";
+
+    ctx.textAlign =
+      "left";
+
+    ctx.fillText(
+      row.name,
+      xOffset + 90,
+      yOffset +
+        rowHeight / 2 +
+        5
+    );
+
+    xOffset +=
+      columnWidths[0];
+
+
+    /*
+    ================================================
+    VARIANTES
+    ================================================
+    */
+
+    columns
+      .slice(1)
+      .forEach(
+        (column, colIndex) => {
+
+          const variant =
+            row.variants[column];
+
+
+          /*
+          ==========================================
+          VARIANTE INEXISTANTE
+          ==========================================
+          */
+
+          if (!variant) {
+
+            ctx.fillStyle =
+              rowBackground;
+
+            ctx.fillRect(
+              xOffset,
+              yOffset,
+              columnWidths[
+                colIndex + 1
+              ],
+              rowHeight
+            );
+
+            ctx.strokeStyle =
+              "#1b3b65";
+
+            ctx.strokeRect(
+              xOffset,
+              yOffset,
+              columnWidths[
+                colIndex + 1
+              ],
+              rowHeight
+            );
+
+            xOffset +=
+              columnWidths[
+                colIndex + 1
+              ];
+
+            return;
+
+          }
+
+
+          /*
+          ==========================================
+          COULEUR SELON LE STATUT
+          ==========================================
+          */
+
+          let background =
+            "#0f172a";
+
+          let statusSymbol =
+            "○";
+
+          let statusColor =
+            "#94a3b8";
+
+
+          if (
+            variant.status === 1
+          ) {
+
+            background =
+              "rgba(16,185,129,0.75)";
+
+            statusSymbol =
+              "✓";
+
+            statusColor =
+              "#10b981";
+
+          }
+
+
+          else if (
+            variant.status === 2
+          ) {
+
+            background =
+              "rgba(251,191,36,0.80)";
+
+            statusSymbol =
+              "★";
+
+            statusColor =
+              "#fbbf24";
+
+          }
+
+
+          else if (
+            variant.status === 3
+          ) {
+
+            background =
+              "rgba(220,38,38,0.80)";
+
+            statusSymbol =
+              "✗";
+
+            statusColor =
+              "#dc2626";
+
+          }
+
+
+          /*
+          ==========================================
+          FOND DE LA CASE
+          ==========================================
+          */
+
+          ctx.fillStyle =
+            background;
+
+          ctx.fillRect(
+            xOffset,
+            yOffset,
+            columnWidths[
+              colIndex + 1
+            ],
+            rowHeight
+          );
+
+
+          /*
+          ==========================================
+          IMAGE DE LA VARIANTE
+          ==========================================
+          */
+
+          const variantImage =
+            variant.image
+              ? imageCache[
+                  variant.image
+                ]
+              : null;
+
+          drawImageContain(
+            variantImage,
+            xOffset + 8,
+            yOffset + 5,
+            columnWidths[
+              colIndex + 1
+            ] - 16,
+            rowHeight - 10,
+            variant.status === 0
+              ? 0.75
+              : 1
+          );
+
+
+          /*
+          ==========================================
+          VOILE SOMBRE POUR NON OBTENU
+          ==========================================
+          */
+
+          if (
+            variant.status === 0
+          ) {
+
+            ctx.fillStyle =
+              "rgba(2,8,23,0.45)";
+
+            ctx.fillRect(
+              xOffset,
+              yOffset,
+              columnWidths[
+                colIndex + 1
+              ],
+              rowHeight
+            );
+
+          }
+
+
+          /*
+          ==========================================
+          PETIT INDICATEUR DE STATUT
+          ==========================================
+          */
+
+          ctx.fillStyle =
+            statusColor;
+
+          ctx.beginPath();
+
+          ctx.arc(
+            xOffset +
+              columnWidths[
+                colIndex + 1
+              ] - 22,
+            yOffset + 22,
+            12,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+
+
+          ctx.fillStyle =
+            "#ffffff";
+
+          ctx.font =
+            "bold 15px Arial";
+
+          ctx.textAlign =
+            "center";
+
+          ctx.fillText(
+            statusSymbol,
+            xOffset +
+              columnWidths[
+                colIndex + 1
+              ] - 22,
+            yOffset + 27
+          );
+
+
+          /*
+          ==========================================
+          BORDURE
+          ==========================================
+          */
+
+          ctx.strokeStyle =
+            "#315b8f";
+
+          ctx.strokeRect(
+            xOffset,
+            yOffset,
+            columnWidths[
+              colIndex + 1
+            ],
+            rowHeight
+          );
+
+
+          xOffset +=
+            columnWidths[
+              colIndex + 1
+            ];
+
+        }
+      );
+
+  }
+
+
+  /*
+  ====================================================
+  FOOTER
+  ====================================================
+  */
+
+  const footerY =
+    tableY +
+    headerHeight +
+    rows.length *
+    rowHeight;
+
+
+  ctx.textAlign =
+    "center";
+
+  ctx.fillStyle =
+    "#bcdcff";
+
+  ctx.font =
+    "bold 16px Arial";
+
+  ctx.fillText(
+    "Esprits Fortnite — Collection Tracker",
+    totalWidth / 2,
+    footerY + 35
+  );
+
+  ctx.font =
+    "14px Arial";
+
+  ctx.fillText(
+    "drolfoam.github.io/esprits-fortnite-tracker/",
+    totalWidth / 2,
+    footerY + 62
+  );
+
+
+  /*
+  ====================================================
+  TÉLÉCHARGEMENT
+  ====================================================
+  */
+
+  const link =
+    document.createElement("a");
+
+  link.href =
+    canvas.toDataURL(
+      "image/png"
+    );
+
+  link.download =
+    "esprits-collection.png";
+
+  link.click();
+
+}
+
+
+displaySpirits();
+
+updateStats();
+initializeSupabase();
+
+</script>
+
+</body>
+</html>
