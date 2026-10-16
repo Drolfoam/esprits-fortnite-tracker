@@ -2665,12 +2665,21 @@ function login() {
 }
 
 auth.onAuthStateChanged(user => {
+let dbListener = null;
+
+auth.onAuthStateChanged(user => {
   const btn = document.getElementById("loginBtn");
+
+  if (dbListener) {
+    dbListener();
+    dbListener = null;
+  }
+
   if (user) {
     btn.textContent = "👤";
     btn.style.width = "48px";
     btn.style.padding = "12px";
-    db.ref("collections/" + user.uid).on("value", snapshot => {   
+    dbListener = db.ref("collections/" + user.uid).on("value", snapshot => {
       const data = snapshot.val();
       if (data) {
         collection = data;
@@ -2679,8 +2688,12 @@ auth.onAuthStateChanged(user => {
         updateStats();
       }
     });
+  } else {
+    btn.textContent = "Se connecter";
+    btn.style.width = "auto";
+    btn.style.padding = "12px 18px";
   }
-});
+});   
 
 const _origSave = saveCollection;
 saveCollection = function() {
