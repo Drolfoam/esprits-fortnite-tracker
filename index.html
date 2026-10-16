@@ -2603,7 +2603,29 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-function toggleModal() {
+function logout() {
+  auth.signOut();
+  const btn = document.getElementById("loginBtn");
+  btn.textContent = "Se connecter";
+  btn.style.width = "auto";
+  btn.style.padding = "12px 18px";
+}
+
+function changePassword() {
+  const user = auth.currentUser;
+  const oldPass = prompt("Ancien mot de passe :");
+  if (!oldPass) return;
+  const newPass = prompt("Nouveau mot de passe (6 caractères min.) :");
+  if (!newPass || newPass.length < 6) { alert("MDP trop court."); return; }
+  const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldPass);
+  user.reauthenticateWithCredential(cred).then(() => {
+    user.updatePassword(newPass).then(() => {
+      alert("✅ MDP changé !");
+    }).catch(err => alert(err.message));
+  }).catch(err => alert(err.message));
+}
+   
+  function toggleModal() {
   const modal = document.getElementById("authModal");
   const user = auth.currentUser;
   document.getElementById("authNotLogged").style.display = user ? "none" : "block";
