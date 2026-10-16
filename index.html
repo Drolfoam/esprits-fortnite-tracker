@@ -83,7 +83,7 @@
 
     .progress-bar {
       height: 100%;
-      width: 0%;ll.
+      width: 0%;
       background: linear-gradient(90deg, #00aaff, #00eaff);
       transition: width 0.3s;
     }
@@ -370,7 +370,7 @@ tr:hover {
 }
 
     .discord-button {
-  wi.discord-button {
+  .discord-button {
   width: 48px;
   height: 48px;
   display: flex;
@@ -2660,6 +2660,25 @@ saveCollection = function() {
 };   
 
 </script>
+
+  </script>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <h2>Connexion</h2>
+    <input type="email" id="authEmail" placeholder="Adresse email">
+    <input type="password" id="authPassword" placeholder="Mot de passe">
+    <div class="btn-row">
+      <button onclick="login()">Se connecter</button>
+      <button onclick="signup()">S'inscrire</button>
+    </div>
+    <button class="close-btn" onclick="toggleModal()">Fermer</button>
+    <p class="auth-msg" id="authMsg"></p>
+  </div>
+</div>
+
+</body>
+</html>   
 
 </body>
 </html>
