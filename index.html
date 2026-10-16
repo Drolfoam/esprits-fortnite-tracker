@@ -388,6 +388,85 @@ tr:hover {
   height: 18px !important;
 }
     
+ .login-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #1265d8;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+.login-btn:hover {
+  background: #1978f5;
+  transform: translateY(-2px);
+}
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal {
+  background: #0a1f4d;
+  border: 1px solid rgba(100,180,255,0.3);
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+.modal h2 {
+  margin-bottom: 20px;
+  color: #d9edff;
+}
+.modal input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(100,180,255,0.3);
+  background: rgba(4,17,42,0.85);
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+.modal input::placeholder {
+  color: #8caed8;
+}
+.modal .btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.modal .btn-row button {
+  flex: 1;
+}
+.modal .close-btn {
+  margin-top: 12px;
+  background: #333;
+  font-size: 13px;
+  padding: 8px 14px;
+}
+.modal .auth-msg {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #ff6868;
+  min-height: 18px;
+}
+      
   </style>
 </head>
 
