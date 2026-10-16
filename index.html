@@ -2663,8 +2663,7 @@ function login() {
     .then(() => { msg.style.color = "#43f58b"; msg.textContent = "✅ Connecté !"; toggleModal(); })
     .catch(err => { msg.style.color = "#ff6868"; msg.textContent = err.message; });
 }
-
-auth.onAuthStateChanged(user => {
+  
 let dbListener = null;
 
 auth.onAuthStateChanged(user => {
