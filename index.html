@@ -483,7 +483,7 @@ tr:hover {
   font-weight: bold;
   text-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
 ">
-  ✅MISE À JOUR DES ESPRITS TERMINÉ❌
+  👉SITE FONCTIONEL👈
   </div>
 
   <div style="
@@ -2616,11 +2616,11 @@ function changePassword() {
   const oldPass = prompt("Ancien mot de passe :");
   if (!oldPass) return;
   const newPass = prompt("Nouveau mot de passe (6 caractères min.) :");
-  if (!newPass || newPass.length < 6) { alert("MDP trop court."); return; }
+  if (!newPass || newPass.length < 6) { alert("Mot de passe trop court."); return; }
   const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldPass);
   user.reauthenticateWithCredential(cred).then(() => {
     user.updatePassword(newPass).then(() => {
-      alert("✅ MDP changé !");
+      alert("✅ Mot de passe changé !");
     }).catch(err => alert(err.message));
   }).catch(err => alert(err.message));
 }
@@ -2642,7 +2642,7 @@ function signup() {
   const password = document.getElementById("authPassword").value;
   const msg = document.getElementById("authMsg");
   if (!email || !password) { msg.textContent = "Remplis tous les champs."; return; }
-  if (password.length < 6) { msg.textContent = "MDP : 6 caractères min."; return; }
+  if (password.length < 6) { msg.textContent = "Mot de passe : 6 caractères min."; return; }
   auth.createUserWithEmailAndPassword(email, password)
     .then(user => {
       const local = JSON.parse(localStorage.getItem("espritsCollection")) || {};
