@@ -2643,8 +2643,12 @@ function login() {
 }
 
 auth.onAuthStateChanged(user => {
+  const btn = document.getElementById("loginBtn");
   if (user) {
-    db.ref("collections/" + user.uid).on("value", snapshot => {
+    btn.textContent = "👤";
+    btn.style.width = "48px";
+    btn.style.padding = "12px";
+    db.ref("collections/" + user.uid).on("value", snapshot => {   
       const data = snapshot.val();
       if (data) {
         collection = data;
