@@ -2604,9 +2604,16 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 function toggleModal() {
-  document.getElementById("authModal").classList.toggle("active");
+  const modal = document.getElementById("authModal");
+  const user = auth.currentUser;
+  document.getElementById("authNotLogged").style.display = user ? "none" : "block";
+  document.getElementById("authLogged").style.display = user ? "block" : "none";
+  if (user) {
+    document.getElementById("loggedEmail").textContent = user.email;
+  }
   document.getElementById("authMsg").textContent = "";
-}
+  modal.classList.toggle("active");
+}   
 
 function signup() {
   const email = document.getElementById("authEmail").value.trim();
