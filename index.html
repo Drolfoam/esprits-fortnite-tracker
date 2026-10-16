@@ -2588,6 +2588,77 @@ displaySpirits();
 
 updateStats();
 
+  
+/* FIREBASE */
+const firebaseConfig = {
+  apiKey: "AIzaSyCxLcwjiCJPxPhbNrghwdPogsd6x0G9uxM",
+  authDomain: "connexion-par-adresse-mail.firebaseapp.com",
+  databaseURL: "https://connexion-par-adresse-mail.firebaserealtime.com",
+  projectId: "connexion-par-adresse-mail",
+  storageBucket: "connexion-par-adresse-mail.appspot.com",
+  messagingSenderId: "695023529798",
+  appId: "1:695023529798:web:0e2b487667fb90e0e8bf47"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+function toggleModal() {
+  document.getElementById("authModal").classList.toggle("active");
+  document.getElementById("authMsg").textContent = "";
+}
+
+function signup() {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const msg = document.getElementById("authMsg");
+  if (!email || !password) { msg.textContent = "Remplis tous les champs."; return; }
+  if (password.length < 6) { msg.textContent = "MDP : 6 caractères min."; return; }
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(user => {
+      const local = JSON.parse(localStorage.getItem("espritsCollection")) || {};
+      db.ref("collections/" + user.user.uid).set(local);
+      msg.style.color = "#43f58b";
+      msg.textContent = "✅ Compte créé !";
+      toggleModal();
+    })
+    .catch(err => { msg.style.color = "#ff6868"; msg.textContent = err.message; });
+}
+
+function login() {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const msg = document.getElementById("authMsg");
+  if (!email || !password) { msg.textContent = "Remplis tous les champs."; return; }
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => { msg.style.color = "#43f58b"; msg.textContent = "✅ Connecté !"; toggleModal(); })
+    .catch(err => { msg.style.color = "#ff6868"; msg.textContent = err.message; });
+}
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    db.ref("collections/" + user.uid).on("value", snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        collection = data;
+        localStorage.setItem("espritsCollection", JSON.stringify(collection));
+        displaySpirits();
+        updateStats();
+      }
+    });
+  }
+});
+
+const _origSave = saveCollection;
+saveCollection = function() {
+  localStorage.setItem("espritsCollection", JSON.stringify(collection));
+  const user = auth.currentUser;
+  if (user) {
+    db.ref("collections/" + user.uid).set(collection);
+  }
+};   
+
 </script>
 
 </body>
