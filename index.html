@@ -402,7 +402,7 @@ tr:hover {
   font-weight: bold;
   text-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
 ">
-  ❌EN MISE À JOUR❌
+  ✅MISE À JOUR DES ESPRITS TERMINÉ❌
   </div>
 
   <div style="
@@ -522,14 +522,14 @@ tr:hover {
           <td>Buisson</td>
           <td>Rare</td>
           <td>Vous octroie un buisson après un certain temps ; au niveau maximum, vous gagnez aussi un buisson à chaque élimination. L’attente entre les buissons se réduit à chaque montée de niveau.</td>
-          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Coin-coin</td>
         </tr>
 
         <tr>
           <td>Aventure</td>
           <td>Rare</td>
           <td>Améliore un objet aléatoire de votre inventaire à chaque montée de niveau.</td>
-          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Coin-coin</td>
         </tr>
 
         <tr>
@@ -543,7 +543,7 @@ tr:hover {
           <td>Jonesy</td>
           <td>Rare</td>
           <td>Récupère un peu de santé ou de bouclier peu après que vous avez subi des dégâts. La quantité soignée augmente à chaque montée de niveau.</td>
-          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Coin-coin</td>
         </tr>
 
         <tr>
@@ -623,6 +623,13 @@ tr:hover {
           <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
         </tr>
 
+        <tr>
+          <td>Miel</td>
+          <td>Épique</td>
+          <td>Chance de faire apparaître des abeilles au point d’impact en infligeant des dégâts avec une arme à distance.</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+        </tr>
+
 <tr>
   <td>Jack Rabbit</td>
   <td>Légendaire</td>
@@ -675,7 +682,14 @@ tr:hover {
   <td>Ruée spectrale</td>
   <td>Mythique</td>
   <td>Saute en l’air pour foncer et traverser certains objets, en dépensant une charge qui se recharge avec le temps. Le temps de recharge diminue à chaque montée de niveau.</td>
-  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Coin-coin</td>
+        </tr>
+
+        <tr>
+  <td>One wish willow</td>
+  <td>Mythique</td>
+  <td>Extrait les esprits équipés des joueurs que tu élimines. Repousse tout autour lorsqu’il subit des dégâts. Se fâche quand on le retire et te signale sur la carte.</td>
+  <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Coin-coin</td>
         </tr>
 
         
@@ -690,7 +704,7 @@ tr:hover {
           <td>✨Klombo</td>
           <td>Mythique</td>
           <td>Accorde des objets aléatoires à chaque niveau et ne monte de niveau qu’en consommant des objets. La qualité des objets s’améliore à chaque montée de niveau.</td>
-          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime</td>
+          <td>Normal, Or, Roi de la triche, Pirate des butins, Chasseur de prime, Coin-coin</td>
         </tr>
         
       </tbody>
@@ -723,7 +737,8 @@ const spirits = [
       ["Roi de la triche", "images1/bush_cheatmaster.webp"],
       ["Pirate des butins", "images/bush_loothacker.webp"],
       ["Chasseur de prime", "images/bush_bountyhunter.webp"],
-      ["Un bonbon ou un sort", "images/bush_tricktreat.webp"]
+      ["Un bonbon ou un sort", "images/bush_tricktreat.webp"],
+      ["Coin-coin", "images/bush_quack.webp"]
     ]
   },
 
@@ -735,7 +750,8 @@ const spirits = [
       ["Roi de la triche", "images1/adventure_cheatmaster.webp"],
       ["Pirate des butins", "images/adventure_loothacker.webp"],
       ["Chasseur de prime", "images/adventure_bountyhunter.webp"],
-      ["Un bonbon ou un sort", "images/adventure_tricktreat.webp"]
+      ["Un bonbon ou un sort", "images/adventure_tricktreat.webp"],
+      ["Coin-coin", "images/adventure_quack.webp"]
     ]
   },
 
@@ -759,7 +775,8 @@ const spirits = [
       ["Roi de la triche", "images1/jonesy_cheatmaster.webp"],
       ["Pirate des butins", "images/jonesy_loothacker.webp"],
       ["Chasseur de prime", "images/jonesy_bountyhunter.webp"],
-      ["Un bonbon ou un sort", "images/jonesy_tricktreat.webp"]
+      ["Un bonbon ou un sort", "images/jonesy_tricktreat.webp"],
+      ["Coin-coin", "images/jonesy_quack.webp"]
     ]
   },
 
@@ -891,6 +908,18 @@ const spirits = [
   },
 
   {
+    name: "Miel",
+    variants: [
+      ["Normal", "images/honey_basic.webp"],
+      ["Or", "images/honey_gold.webp"],
+      ["Roi de la triche", "images1/honey_cheatmaster.webp"],
+      ["Pirate des butins", "images/honey_loothacker.webp"],
+      ["Chasseur de prime", "images/honey_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/honey_tricktreat.webp"]
+    ]
+  },
+
+  {
     name: "Jack Rabbit",
     variants: [
       ["Normal", "images/jackrabbit_basic.webp"],
@@ -982,7 +1011,20 @@ const spirits = [
       ["Roi de la triche", "images1/spookydash_cheatmaster.webp"],
       ["Pirate des butins", "images/spookydash_loothacker.webp"],
       ["Chasseur de prime", "images/spookydash_bountyhunter.webp"],
-      ["Un bonbon ou un sort", "images/spookydash_tricktreat.webp"]
+      ["Un bonbon ou un sort", "images/spookydash_tricktreat.webp"],
+      ["Coin-coin", "images/spookydash_quack.webp"]
+    ]
+  },
+
+  {
+    name: "One wish willow",
+    variants: [
+      ["Normal", "images/onewishwillow_basic.webp"],
+      ["Or", "images/onewishwillow_gold.webp"],
+      ["Roi de la triche", "images1/onewishwillow_cheatmaster.webp"],
+      ["Pirate des butins", "images/onewishwillow_loothacker.webp"],
+      ["Chasseur de prime", "images/onewishwillow_bountyhunter.webp"],
+      ["Un bonbon ou un sort", "images/onewishwillow_tricktreat.webp"]
     ]
   },
 
@@ -1006,7 +1048,8 @@ const spirits = [
       ["Roi de la triche", "images1/klombo_cheatmaster.webp"],
       ["Pirate des butins", "images/klombo_loothacker.webp"],
       ["Chasseur de prime", "images/klombo_bountyhunter.webp"],
-      ["Un bonbon ou un sort", "images/klombo_tricktreat.webp"]
+      ["Un bonbon ou un sort", "images/klombo_tricktreat.webp"],
+      ["Coin-coin", "images/klombo_quack.webp"]
     ]
   }
 
