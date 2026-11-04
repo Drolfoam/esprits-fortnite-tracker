@@ -968,6 +968,17 @@ AFFICHAGE
 ====================================================
 */
 
+  function getRarityClass(rarity) {
+  const map = {
+    "Rare": "rarity-rare",
+    "Épique": "rarity-epique",
+    "Légendaire": "rarity-legendaire",
+    "Mythique": "rarity-mythique"
+  };
+  return map[rarity] || "rarity-rare";
+}
+   
+
 function displaySpirits() {
 
   const container =
@@ -1026,14 +1037,14 @@ function displaySpirits() {
 
       section.innerHTML = `
 
-        const rarityClass = getRarityClass(sprite.rarity);
+              const rarityClass = getRarityClass(sprite.rarity);
 
-section.innerHTML = `
-  <h2 class="${rarityClass}">
-    ${sprite.name}
-  </h2>
-  <div class="variants-grid"></div>
-  `;
+      section.innerHTML = `
+        <h2 class="${rarityClass}">
+          ${sprite.name}
+        </h2>
+        <div class="variants-grid"></div>
+      `;   
 
 
       const grid =
