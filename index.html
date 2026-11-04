@@ -806,7 +806,7 @@ const spirits = [
 
   {
     name: "Escargophone",
-    rariry: "Légendaire",
+    rarity: "Légendaire",
     variants: [
       ["Normal", "images/transpondersnail_basic.webp"]
     ]
@@ -1039,12 +1039,12 @@ function displaySpirits() {
 
               const rarityClass = getRarityClass(sprite.rarity);
 
-      section.innerHTML = `
-        <h2 class="${rarityClass}">
-          ${sprite.name}
-        </h2>
-        <div class="variants-grid"></div>
-      `;   
+section.innerHTML = `
+  <h2 class="${rarityClass}">
+    ${sprite.name}
+  </h2>
+  <div class="variants-grid"></div>
+`;
 
 
       const grid =
