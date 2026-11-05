@@ -478,6 +478,89 @@ tr:hover {
 .sprite-section h2.rarity-epique { border-color: #B14BF4; }
 .sprite-section h2.rarity-legendaire { border-color: #FF9E2C; }
 .sprite-section h2.rarity-mythique { border-color: #FF3E3E; }   
+
+    /* TABLEAUX DU GUIDE */
+
+.info-section,
+.variants-info {
+  max-width: 1200px;
+  margin: 50px auto;
+}
+
+.info-section h2,
+.variants-info h2 {
+  color: #d9edff;
+  margin-bottom: 12px;
+  font-size: 25px;
+}
+
+.info-description,
+.variants-description {
+  color: #bcdcff;
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(100,180,255,0.3);
+  background: rgba(8,32,78,0.8);
+}
+
+.guide-table {
+  width: 100%;
+  min-width: 750px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.guide-table th {
+  background: linear-gradient(135deg, #1265d8, #08449c);
+  color: white;
+  padding: 18px 15px;
+  text-align: left;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.guide-table td {
+  padding: 17px 15px;
+  color: #d9edff;
+  border-bottom: 1px solid rgba(100,180,255,0.15);
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.guide-table tbody tr:nth-child(even) {
+  background: rgba(35,100,180,0.13);
+}
+
+.guide-table tbody tr:hover {
+  background: rgba(50,150,255,0.2);
+}
+
+.guide-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.guide-table td:first-child {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .info-section,
+  .variants-info {
+    margin: 35px auto;
+  }
+
+  .info-section h2,
+  .variants-info h2 {
+    font-size: 21px;
+  }
+}
       
   </style>
 </head>
@@ -600,7 +683,7 @@ tr:hover {
 
   <div class="table-container">
 
-    <table>
+    <table class="guide-table">
 
       <thead>
         <tr>
@@ -714,21 +797,40 @@ tr:hover {
     et leurs capacités.
   </p>
 
-  <div class="variants-info-grid">
+  <div class="table-container">
 
-    <div class="variant-info-card normal">
-      <h3>NORMAL</h3>
-      <p>
-        L'esprit normal sans capacité supplémentaire.
-      </p>
-    </div>
+    <table class="guide-table">
 
-    <div class="variant-info-card gold">
-      <h3>CHANCEUX</h3>
-      <p>
-        Une variante qui rend les esprits rouge et qui permet de révéler les coffres à proximité.
-      </p>
-    </div>
+      <thead>
+        <tr>
+          <th>Variante</th>
+          <th>Apparence</th>
+          <th>Explication</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>NORMAL</td>
+          <td>Apparence normale</td>
+          <td>
+            L'esprit normal sans capacité supplémentaire.
+          </td>
+        </tr>
+
+        <tr>
+          <td>CHANCEUX</td>
+          <td>Apparence rouge</td>
+          <td>
+            Une variante qui rend les esprits rouges
+            et qui permet de révéler les coffres à proximité.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
 
   </div>
 
