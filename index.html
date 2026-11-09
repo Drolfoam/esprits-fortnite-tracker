@@ -712,63 +712,63 @@ tr:hover {
           <td>NORDBERT</td>
           <td>Rare</td>
           <td>Révèle les esprits proches et octroie plus d'objets lors de l'ouverture de coffres enfouis. Le rayon de détection de l'esprit augmente à chaque niveau !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
         </tr>
 
         <tr>
           <td>BARRY O'POISSON</td>
           <td>Rare</td>
           <td>Réduit la perte d'endurance du sprint tactique dans l'eau. Obtenez l'effet Slap au niveau maximum !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
         </tr>
 
         <tr>
           <td>PIERROQUET</td>
           <td>Rare</td>
           <td>Augmente la vitesse de rechargement, avec une chance que le rechargement rende des munitions. Rechargez plus vite et profitez d'une plus grande chance de récupérer des munitions à chaque niveau supérieur !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
         </tr>
 
         <tr>
           <td>FRÉCINETTE PELÉE</td></td>
           <td>Rare</td>
           <td>Indique les éliminations sur la carte. Le rayon de l'effet augmente à chaque gain de niveau !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
         </tr>
 
       <tr>
           <td>MINI CRAPOULPE</td>
           <td>Épique</td>
           <td>Plonger dans un trou de pêche permet de pêcher et donne du butin bonus. Obtenez plus de butin à mesure que vous gagnez des niveaux.</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
       </tr>
 
       <tr>
           <td>MARQUESWELL</td>
           <td>Épique</td>
           <td>Révèle des cartes au trésor et des avis de recherche. Fait apparaître une carte au trésor au niveau max !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
       </tr>
 
       <tr>
           <td>CARPE DIEM</td>
           <td>Épique</td>
           <td>Régénère des PV sur la durée lorsque vous êtes dans l'eau. Augmente la quantité de PV régénérés à chacun de niveau !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
       </tr>
 
       <tr>
           <td>ORLANDO</td>
           <td>Épique</td>
           <td>Confère une chance de faire apparaître du butin supplémentaire dans les coffres au trésor et annule les dégâts de chutes. Augmente les chances de faire apparaître un objet de butin supplémentaires à chaque gain de niveau !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
       </tr>
 
       <tr>
           <td>MINI FLACKO</td>
           <td>Légendair</td>
           <td>Atterrir crée une petite onde de choc qui repousse les ennemis. Augmente la puissance de repoussement à chaque gain de niveau !</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
       </tr>
 
       <tr>
@@ -777,6 +777,11 @@ tr:hover {
           <td>Accorde des ressources supplémentaires lors du ramassage, et vos coéquipiers qui ont également ces esprit équipé reçoivent aussi quelques ressources supplémentaires ! La quantité de ressources reçues augmente à chaque gain de niveau !</td>
           <td>Normal</td>
       </tr>
+
+      <tr>
+        <td>LIL'UZI VERT JR.</td>
+        <td>Légendaire</td>
+        <td>Génère un effet Aspergeur du brave lors de la restauration des boucliers. Temps de recharge réduit à chaque gain de niveau !</td>
 
       <tr>
           <td>SWEET DREAMS</td>
@@ -789,7 +794,7 @@ tr:hover {
           <td>TADOR</td>
           <td>Mythique</td>
           <td>Ouvrir un coffre augmente la vitesse de la pioche et la vitesse de déplacement.</td>
-          <td>Normal, Chanceux</td>
+          <td>Normal, Chanceux, Maudit</td>
       </tr>
         
       </tbody>
@@ -834,11 +839,13 @@ tr:hover {
         <tr>
           <td>CHANCEUX</td>
           <td>Apparence rouge</td>
-          <td>
-            Une variante qui rend les esprits rouges
-            et qui permet de révéler les coffres à proximité.
-          </td>
+          <td>Révèle les coffres à proximité.</td>
         </tr>
+
+        <tr>
+          <td>MAUDIT</td>
+          <td>Apparence métallique avec yeux oranges.</td>
+          <td>Augmente les chances d'obtenir des variantes d'esprit rare, mais vous subissez des dégâts dans l'eau.</td>
 
       </tbody>
 
@@ -868,6 +875,7 @@ const spirits = [
     variants: [
       ["Normal", "images/wayfinder_basic.webp"],
       ["Chanceux", "images/wayfinder_jeweled.webp"],
+      ["Maudit", "images/wayfinder_cursed.webp"]
     ]
   },
 
@@ -877,6 +885,7 @@ const spirits = [
     variants: [
       ["Normal", "images/barryofish_basic.webp"],
       ["Chanceux", "images/barryofish_jeweled.webp"],
+      ["Maudit", "images/barryofish_cursed.webp"]
     ]
   },
 
@@ -886,6 +895,7 @@ const spirits = [
     variants: [
       ["Normal", "images/repete_basic.webp"],
       ["Chanceux", "images/repete_jeweled.webp"],
+      ["Maudit", "images/repete_cursed.webp"]
     ]
   },
 
@@ -895,6 +905,7 @@ const spirits = [
     variants: [
       ["Normal", "images/halfpeeld_basic.webp"],
       ["Chanceux", "images/halfpeeld_jeweled.webp"],
+      ["Maudit", "images/halfpeeld_cursed.webp"]
     ]
   },
 
@@ -904,6 +915,7 @@ const spirits = [
     variants: [
       ["Normal", "images/lilsquibbly_basic.webp"],
       ["Chanceux", "images/lilsquibbly_jeweled.webp"],
+      ["Maudit", "images/lilsquibbly_cursed.webp"]
     ]
   },
 
@@ -913,6 +925,7 @@ const spirits = [
     variants: [
       ["Normal", "images/exmarks_basic.webp"],
       ["Chanceux", "images/exmarks_jeweled.webp"],
+      ["Maudit", "images/exmarks_cursed.webp"]
     ]
   },
 
@@ -922,6 +935,7 @@ const spirits = [
     variants: [
       ["Normal", "images/kelper_basic.webp"],
       ["Chanceux", "images/kelper_jeweled.webp"],
+      ["Maudit", "images/kelper_cursed.webp"]
     ]
   },
 
@@ -931,6 +945,7 @@ const spirits = [
     variants: [
       ["Normal", "images/chester_basic.webp"],
       ["Chanceux", "images/chester_jeweled.webp"],
+      ["Maudit", "images/chester_cursed.webp"]
     ]
   },
 
@@ -940,6 +955,7 @@ const spirits = [
     variants: [
       ["Normal", "images/lilflacko_basic.webp"],
       ["Chanceux", "images/lilflacko_jeweled.webp"],
+      ["Maudit", "images/lilflacko_cursed.webp"]
     ]
   },
 
@@ -950,6 +966,14 @@ const spirits = [
       ["Normal", "images/transpondersnail_basic.webp"]
     ]
   },
+
+  {
+    name: "LIL'UZI VERT JR.",
+    rarity: "Légendaire",
+    variants: [
+      ["Normal", "images/liluzivertjr_basic.webp"],
+      ["Chanceux", "images/liluzivertjr_jeweled.webp"],
+      ["Maudit", "images/liluzivertjr_cursed.webp"]
 
   {
     name: "SWEET DREAMS",
@@ -965,6 +989,7 @@ const spirits = [
     variants: [
       ["Normal", "images/plundarrgh_basic.webp"],
       ["Chanceux", "images/plundarrgh_jeweled.webp"],
+      ["Maudit", "images/plundarrgh_cursed.webp"]
     ]
   },
 
@@ -1538,11 +1563,13 @@ async function exportImage() {
   const columns = [
     "Esprits",
     "Normal",
-    "Chanceux"
+    "Chanceux",
+    "Maudit"
   ];
 
   const columnWidths = [
     550,
+    450,
     450,
     450
   ];
