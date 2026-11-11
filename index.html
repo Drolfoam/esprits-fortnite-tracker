@@ -561,11 +561,229 @@ tr:hover {
     font-size: 21px;
   }
 }
+
+    /* ===== MENU HAMBURGER ===== */
+.hamburger {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  width: 48px;
+  height: 48px;
+  background: rgba(8, 32, 78, 0.9);
+  border: 1px solid rgba(100, 180, 255, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: 0.3s;
+}
+
+.hamburger:hover {
+  background: rgba(12, 45, 100, 0.95);
+  border-color: #3296ff;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2.5px;
+  background: #bcdcff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 300px;
+  height: 100%;
+  background: linear-gradient(180deg, #0a1f4d, #06132f);
+  border-right: 1px solid rgba(100,180,255,0.3);
+  z-index: 1600;
+  padding: 25px 20px;
+  overflow-y: auto;
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar h3 {
+  color: #d9edff;
+  font-size: 16px;
+  margin: 18px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(100,180,255,0.2);
+}
+
+.sidebar h3:first-child {
+  margin-top: 0;
+}
+
+.filter-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(100,180,255,0.2);
+  background: rgba(8,32,78,0.6);
+  color: #bcdcff;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.filter-btn:hover {
+  background: rgba(18,101,216,0.4);
+  border-color: #3296ff;
+}
+
+.filter-btn.selected {
+  background: rgba(18,101,216,0.7);
+  border-color: #4da3ff;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Compteurs par variante */
+.variant-counters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.variant-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(8,32,78,0.6);
+  border: 1px solid rgba(100,180,255,0.15);
+}
+
+.variant-counter .vc-name {
+  color: #d9edff;
+  font-size: 14px;
+}
+
+.variant-counter .vc-count {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.variant-counter .vc-bar {
+  width: 100%;
+  height: 6px;
+  background: #07152e;
+  border-radius: 3px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.variant-counter .vc-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.vc-fill-normal { background: #60A6FF; }
+.vc-fill-chanceux { background: #FF6B6B; }
+.vc-fill-maudit { background: #FF9E2C; }
+
+.sidebar-title {
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(100,180,255,0.3);
+}   
       
   </style>
 </head>
 
 <body>
+
+  <!-- Hamburger -->
+<div class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<!-- Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-title">👻 Filtres</div>
+
+  <h3>Statut</h3>
+  <button class="filter-btn selected" data-filter="status" data-value="tous" onclick="setFilter('status','Tous')">Tous</button>
+  <button class="filter-btn" data-filter="status" data-value="manquants" onclick="setFilter('status','Manquants')">⚪ Manquants</button>
+  <button class="filter-btn" data-filter="status" data-value="obtenu" onclick="setFilter('status','Obtenus')">🟢 Obtenus</button>
+  <button class="filter-btn" data-filter="status" data-value="maitrise" onclick="setFilter('status','Maitrisés')">🟡 Maîtrisés</button>
+  <button class="filter-btn" data-filter="status" data-value="perdu" onclick="setFilter('status','Perdus')">🔴 Perdus</button>
+
+  <h3>Rareté</h3>
+  <button class="filter-btn selected" data-filter="rarity" data-value="toutes" onclick="setFilter('rarity','toutes')">Toutes</button>
+  <button class="filter-btn" data-filter="rarity" data-value="Rare" onclick="setFilter('rarity','Rare')">Rare</button>
+  <button class="filter-btn" data-filter="rarity" data-value="Épique" onclick="setFilter('rarity','Épique')">Épique</button>
+  <button class="filter-btn" data-filter="rarity" data-value="Légendaire" onclick="setFilter('rarity','Légendaire')">Légendaire</button>
+  <button class="filter-btn" data-filter="rarity" data-value="Mythique" onclick="setFilter('rarity','Mythique')">Mythique</button>
+
+  <h3>Variante</h3>
+  <button class="filter-btn selected" data-filter="variant" data-value="toutes" onclick="setFilter('variant','toutes')">Toutes</button>
+  <button class="filter-btn" data-filter="variant" data-value="Normal" onclick="setFilter('variant','Normal')">Normal</button>
+  <button class="filter-btn" data-filter="variant" data-value="Chanceux" onclick="setFilter('variant','Chanceux')">Chanceux</button>
+  <button class="filter-btn" data-filter="variant" data-value="Maudit" onclick="setFilter('variant','Maudit')">Maudit</button>
+
+  <h3>Compteurs par variante</h3>
+  <div class="variant-counters" id="variantCounters">
+    <!-- Rempli par JS -->
+  </div>
+</div>   
 
 <header style="position:relative;">
   <h1>👻 Esprits Fortnite</h1>
@@ -996,6 +1214,189 @@ const spirits = [
   },
 
 ];
+
+
+  /*
+====================================================
+FILTRES & SIDEBAR
+====================================================
+*/
+
+let currentFilters = {
+  status: "tous",
+  rarity: "toutes",
+  variant: "toutes"
+};
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  const btn = document.getElementById("hamburgerBtn");
+
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("active");
+  btn.classList.toggle("active");
+
+  if (sidebar.classList.contains("active")) {
+    updateVariantCounters();
+  }
+}
+
+function setFilter(type, value) {
+  currentFilters[type] = value;
+
+  // Mettre à jour le bouton sélectionné
+  document.querySelectorAll(`.filter-btn[data-filter="${type}"]`).forEach(btn => {
+    btn.classList.remove("selected");
+    if (btn.dataset.value === value) {
+      btn.classList.add("selected");
+    }
+  });
+
+  displaySpirits();
+}
+
+function updateVariantCounters() {
+  const counters = {
+    "Normal": { total: 0, collected: 0 },
+    "Chanceux": { total: 0, collected: 0 },
+    "Maudit": { total: 0, collected: 0 }
+  };
+
+  spirits.forEach(sprite => {
+    sprite.variants.forEach(variant => {
+      const vName = variant[0];
+      if (counters[vName]) {
+        counters[vName].total++;
+        const id = getId(sprite.name, vName);
+        if (getStatus(id) !== 0) {
+          counters[vName].collected++;
+        }
+      }
+    });
+  });
+
+  const container = document.getElementById("variantCounters");
+  container.innerHTML = "";
+
+  const colors = {
+    "Normal": "vc-fill-normal",
+    "Chanceux": "vc-fill-chanceux",
+    "Maudit": "vc-fill-maudit"
+  };
+
+  Object.keys(counters).forEach(vName => {
+    const c = counters[vName];
+    const pct = c.total > 0 ? Math.round((c.collected / c.total) * 100) : 0;
+
+    container.innerHTML += `
+      <div class="variant-counter">
+        <div style="flex:1">
+          <div class="vc-name">${vName}</div>
+          <div class="vc-bar">
+            <div class="vc-fill ${colors[vName]}" style="width:${pct}%"></div>
+          </div>
+        </div>
+        <div class="vc-count">${c.collected}/${c.total}</div>
+      </div>
+    `;
+  });
+}
+  
+
+/*
+====================================================
+MODIFIER displaySpirits pour intégrer les filtres
+====================================================
+*/
+
+// Remplace ta fonction displaySpirits() par celle-ci :
+function displaySpirits() {
+  const container = document.getElementById("spiritsContainer");
+  const search = document.getElementById("search").value.toLowerCase();
+
+  container.innerHTML = "";
+
+  spirits.forEach(sprite => {
+
+    // Filtre rareté
+    if (currentFilters.rarity !== "toutes" && sprite.rarity !== currentFilters.rarity) {
+      return;
+    }
+
+    const filteredVariants = sprite.variants.filter(variant => {
+
+      // Filtre recherche
+      const matchesSearch =
+        sprite.name.toLowerCase().includes(search) ||
+        variant[0].toLowerCase().includes(search);
+
+      if (!matchesSearch) return false;
+
+      // Filtre variante
+      if (currentFilters.variant !== "toutes" && variant[0] !== currentFilters.variant) {
+        return false;
+      }
+
+      // Filtre statut
+      const id = getId(sprite.name, variant[0]);
+      const status = getStatus(id);
+
+      if (currentFilters.status === "manquants" && status !== 0) return false;
+      if (currentFilters.status === "obtenu" && status !== 1) return false;
+      if (currentFilters.status === "maitrise" && status !== 2) return false;
+      if (currentFilters.status === "perdu" && status !== 3) return false;
+
+      return true;
+    });
+
+    if (filteredVariants.length === 0) return;
+
+    const section = document.createElement("section");
+    section.className = "sprite-section";
+
+    const rarityClass = getRarityClass(sprite.rarity);
+
+    section.innerHTML = `
+      <h2 class="${rarityClass}">${sprite.name}</h2>
+      <div class="variants-grid"></div>
+    `;
+
+    const grid = section.querySelector(".variants-grid");
+
+    filteredVariants.forEach(variant => {
+      const variantName = variant[0];
+      const image = variant[1];
+      const id = getId(sprite.name, variantName);
+      const status = getStatus(id);
+
+      const card = document.createElement("div");
+      card.className = "variant-card";
+
+      if (status === 1) card.classList.add("status-obtenu");
+      if (status === 2) card.classList.add("status-maitrise");
+      if (status === 3) card.classList.add("status-perdu");
+
+      let imageHTML;
+      if (image) {
+        imageHTML = `<img class="variant-image" src="${image}" alt="${sprite.name} ${variantName}">`;
+      } else {
+        imageHTML = `<div class="fallback-image">👻</div>`;
+      }
+
+      card.innerHTML = `
+        ${imageHTML}
+        <div class="variant-name">${variantName}</div>
+        <div class="status">${getStatusName(status)}</div>
+      `;
+
+      card.addEventListener("click", () => clickVariant(id));
+      grid.appendChild(card);
+    });
+
+    container.appendChild(section);
+  });
+}   
   
 
 /*
