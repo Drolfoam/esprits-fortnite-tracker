@@ -568,33 +568,28 @@ tr:hover {
   top: 15px;
   left: 15px;
   z-index: 2000;
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   background: rgba(8, 32, 78, 0.9);
   border: 1px solid rgba(100, 180, 255, 0.3);
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   transition: 0.3s;
-}
-
-.hamburger:hover {
-  background: rgba(12, 45, 100, 0.95);
-  border-color: #3296ff;
 }
 
 .hamburger span {
   display: block;
-  width: 24px;
-  height: 2.5px;
+  width: 28px;
+  height: 3px;
   background: #bcdcff;
   border-radius: 2px;
   transition: 0.3s;
-}
+}   
 
 .hamburger.active span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
@@ -790,16 +785,20 @@ tr:hover {
   <p>Collectionne, maîtrise et suis tous tes esprits.</p>
 
   <div style="
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    color: #bcdcff;
-    font-size: 14px;
-    font-weight: bold;
-  ">
-    👥 <span style="font-size:12px;">personnes sur le site</span><br>
-    <script type="text/javascript" src="https://counter.websiteout.com/js/13/0/0/1"></script>
-  </div>
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: #bcdcff;
+  font-size: 22px;
+  font-weight: bold;
+  background: rgba(8,32,78,0.8);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(100,180,255,0.3);
+">
+  👥 <span style="font-size:14px; font-weight:normal;">personnes sur le site</span><br>
+  <script type="text/javascript" src="https://counter.websiteout.com/js/13/0/0/1"></script>
+</div>   
 
   <div style="
   margin-top: 15px;
