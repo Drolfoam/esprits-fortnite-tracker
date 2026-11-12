@@ -859,6 +859,8 @@ tr:hover {
     👑 MAÎTRE DES ESPRITS — Tu as obtenu tous les esprits !
   </div>
 
+  <div id="rarityProgress"></div>   
+
   <div class="actions">
 
     <button onclick="exportImage()">
@@ -873,8 +875,10 @@ tr:hover {
 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
   <path fill="currentColor" d="M20.317 4.37a19.8 19.8 0 0 0-4.885-1.515c-.213.385-.456.905-.627 1.31a18.27 18.27 0 0 0-5.61 0c-.171-.405-.42-.925-.63-1.31A19.736 19.736 0 0 0 3.677 4.37C.533 9.055-.319 13.625.106 18.134a19.9 19.9 0 0 0 5.993 3.03c.49-.665.926-1.372 1.304-2.117a12.9 12.9 0 0 1-2.05-.988c.172-.127.34-.26.504-.397 3.956 1.793 8.24 1.793 12.15 0 .165.137.333.27.505.397-.654.38-1.34.713-2.05.988.378.745.814 1.452 1.304 2.117a19.9 19.9 0 0 0 5.993-3.03c.5-5.229-.857-9.76-3.442-13.764ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.201 0 2.176 1.085 2.157 2.418 0 1.334-.956 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.201 0 2.176 1.085 2.157 2.418 0 1.334-.956 2.419-2.157 2.419Z"/>
 </svg>
-</a>
-    <button class="login-btn" id="loginBtn" onclick="toggleModal()" title="Connexion" style="width:auto; padding:12px 18px;">Se connecter</button>   
+
+  <button onclick="getHuntTarget()">🎯 Mode Chasse</button>
+<button onclick="generateCode()">🔑 Mon code</button>
+<button onclick="compareCollections()">⚔️ Comparer</button>   
 
   </div>
 
@@ -2634,6 +2638,189 @@ async function exportImage() {
 displaySpirits();
 
 updateStats()
+
+  /* ===== MODE CHASSE ===== */
+function getHuntTarget() {
+  const missing = [];
+
+  spirits.forEach(sprite => {
+    sprite.variants.forEach(variant => {
+      const id = getId(sprite.name, variant[0]);
+      if (getStatus(id) === 0) {
+        missing.push({
+          name: sprite.name,
+          variant: variant[0],
+          rarity: sprite.rarity,
+          score: { "Rare": 1, "Épique": 2, "Légendaire": 3, "Mythique": 4 }[sprite.rarity]
+        });
+      }
+    });
+  });
+
+  missing.sort((a, b) => b.score - a.score);
+  const top5 = missing.slice(0, 5);
+
+  let html = `<div style="max-width:1200px;margin:20px auto;padding:20px;border-radius:16px;background:rgba(8,32,78,0.9);border:1px solid rgba(255,158,44,0.4);">
+    <h3 style="color:#FF9E2C;margin-bottom:15px;">🎯 Prochaines cibles</h3>`;
+
+  top5.forEach((t, i) => {
+    const c = { "Rare": "#60A6FF", "Épique": "#B14BF4", "Légendaire": "#FF9E2C", "Mythique": "#FF3E3E" }[t.rarity];
+    html += `<div style="display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:6px;background:rgba(0,0,0,0.3);border-radius:10px;border-left:4px solid ${c};">
+      <span style="font-size:22px;font-weight:bold;color:${c};">${i + 1}.</span>
+      <div><strong style="color:#fff;">${t.name}</strong> <span style="color:#bcdcff;">— ${t.variant}</span></div>
+      <span style="margin-left:auto;padding:4px 10px;border-radius:8px;background:${c}22;color:${c};font-size:13px;font-weight:bold;">${t.rarity}</span>
+    </div>`;
+  });
+
+  if (top5.length === 0) html += `<p style="color:#43f58b;text-align:center;">🎉 Tout est collectionné !</p>`;
+  html += `</div>`;
+
+  document.getElementById("spiritsContainer").insertAdjacentHTML("afterbegin", html);
+}
+
+
+/* ===== CODE DE COLLECTION ===== */
+function generateCode() {
+  let code = "";
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let letterIndex = 0;
+
+  spirits.forEach(sprite => {
+    let spriteCode = letters[letterIndex] + " = ";
+    sprite.variants.forEach(variant => {
+      const s = getStatus(getId(sprite.name, variant[0]));
+      const icon = s === 1 ? "O" : s === 2 ? "M" : s === 3 ? "P" : "-";
+      spriteCode += icon + " ";
+    });
+    code += spriteCode + "\n";
+    letterIndex++;
+  });
+
+  navigator.clipboard.writeText(code.trim());
+  alert("✅ Code copié !\n\nLégende :\nO = Obtenu\nM = Maîtrisé\nP = Perdu\n- = Manquant");
+}
+
+function compareCollections() {
+  const code1 = prompt("Colle TON code :");
+  const code2 = prompt("Colle le code de ton AMI :");
+  if (!code1 || !code2) return;
+
+  const parseCode = (code) => {
+    const result = {};
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    code.split("\n").forEach(line => {
+      const match = line.match(/^([A-Z])\s*=\s*(.+)$/);
+      if (!match) return;
+      const spriteIndex = letters.indexOf(match[1]);
+      if (spriteIndex >= spirits.length) return;
+      const sprite = spirits[spriteIndex];
+      const symbols = match[2].trim().split(/\s+/);
+      sprite.variants.forEach((variant, i) => {
+        const s = symbols[i] === "O" ? 1 : symbols[i] === "M" ? 2 : symbols[i] === "P" ? 3 : 0;
+        result[getId(sprite.name, variant[0])] = s;
+      });
+    });
+    return result;
+  };
+
+  const coll1 = parseCode(code1);
+  const coll2 = parseCode(code2);
+
+  let html = `<div style="max-width:1200px;margin:20px auto;padding:20px;border-radius:16px;background:rgba(8,32,78,0.9);border:1px solid rgba(100,180,255,0.3);">
+    <h3 style="color:#fff;margin-bottom:15px;">⚔️ Comparaison</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+    <tr style="background:#1265d8;color:#fff;"><th style="padding:10px;">Esprit</th><th style="padding:10px;">Toi</th><th style="padding:10px;">Ami</th><th style="padding:10px;">Trade</th></tr>`;
+
+  spirits.forEach(sprite => {
+    sprite.variants.forEach(variant => {
+      const id = getId(sprite.name, variant[0]);
+      const s1 = coll1[id] || 0;
+      const s2 = coll2[id] || 0;
+      const icon = (s) => s === 1 ? "🟢" : s === 2 ? "🟡" : s === 3 ? "🔴" : "⚪";
+      const trade = (s1 === 0 && s2 > 0) ? "👈 Il a" : (s1 > 0 && s2 === 0) ? "👉 Toi" : "";
+
+      html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+        <td style="padding:8px;color:#fff;">${sprite.name} <small style="color:#8caed8;">${variant[0]}</small></td>
+        <td style="text-align:center;">${icon(s1)}</td>
+        <td style="text-align:center;">${icon(s2)}</td>
+        <td style="text-align:center;color:#FF9E2C;font-weight:bold;">${trade}</td>
+      </tr>`;
+    });
+  });
+
+  html += `</table></div>`;
+  document.getElementById("spiritsContainer").insertAdjacentHTML("afterbegin", html);
+}
+
+
+/* ===== BARRES PAR RARETÉ ===== */
+function updateRarityBars() {
+  const byRarity = {};
+  spirits.forEach(sprite => {
+    if (!byRarity[sprite.rarity]) byRarity[sprite.rarity] = { total: 0, collected: 0 };
+    sprite.variants.forEach(variant => {
+      byRarity[sprite.rarity].total++;
+      if (getStatus(getId(sprite.name, variant[0])) !== 0) byRarity[sprite.rarity].collected++;
+    });
+  });
+
+  const colors = { "Rare": "#60A6FF", "Épique": "#B14BF4", "Légendaire": "#FF9E2C", "Mythique": "#FF3E3E" };
+  let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:15px;">`;
+
+  ["Rare", "Épique", "Légendaire", "Mythique"].forEach(r => {
+    const d = byRarity[r] || { total: 0, collected: 0 };
+    const pct = d.total ? Math.round((d.collected / d.total) * 100) : 0;
+    html += `<div style="flex:1;min-width:120px;">
+      <div style="font-size:12px;color:${colors[r]};margin-bottom:4px;font-weight:bold;">${r} ${pct}%</div>
+      <div style="height:8px;background:#07152e;border-radius:4px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${colors[r]};border-radius:4px;transition:width 0.3s;"></div>
+      </div>
+    </div>`;
+  });
+
+  html += `</div>`;
+  const container = document.getElementById("rarityProgress");
+  if (container) container.innerHTML = html;
+}
+
+
+/* ===== CONFETTIS ===== */
+function celebrate() {
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;";
+  document.body.appendChild(canvas);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+
+  const particles = [];
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20,
+      size: Math.random() * 8 + 4,
+      speed: Math.random() * 3 + 2,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      angle: Math.random() * Math.PI * 2
+    });
+  }
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame++;
+    particles.forEach(p => {
+      p.y += p.speed;
+      p.x += Math.sin(p.angle) * 1.5;
+      p.angle += 0.05;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    });
+    if (frame < 120) requestAnimationFrame(animate);
+    else canvas.remove();
+  }
+  animate();
+}   
 
 </script>
 </body>
