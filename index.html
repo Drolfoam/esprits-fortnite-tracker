@@ -770,19 +770,6 @@ tr:hover {
 <div class="sidebar" id="sidebar">
   <div class="sidebar-title">👻 Filtres</div>
 
-      <!-- Modal Chasse / Comparateur -->
-<div class="modal-overlay" id="resultModal">
-  <div class="modal" style="max-width:700px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
-    <h2 id="resultTitle" style="margin-bottom:15px;"></h2>
-    <div id="resultContent"></div>
-    <div style="display:flex;gap:10px;margin-top:20px;">
-      <button onclick="downloadResult()" style="flex:1;">📸 Télécharger</button>
-      <button onclick="copyResultImage()" style="flex:1;">📋 Copier l'image</button>
-      <button onclick="closeResultModal()" style="background:#333;">✖</button>
-    </div>
-  </div>
-</div>   
-
   <h3>Statut</h3>
   <button class="filter-btn selected" data-filter="status" data-value="tous" onclick="setFilter('status','tous')">Tous</button>
 <button class="filter-btn" data-filter="status" data-value="manquants" onclick="setFilter('status','manquants')">⚪ Manquants</button>
@@ -807,7 +794,20 @@ tr:hover {
   <div class="variant-counters" id="variantCounters">
     <!-- Rempli par JS -->   
   </div>
-</div>   
+</div>
+
+<!-- Modal Résultat -->
+<div class="modal-overlay" id="resultModal" onclick="if(event.target===this)closeResultModal()">
+  <div class="modal" style="max-width:700px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
+    <h2 id="resultTitle" style="margin-bottom:15px;"></h2>
+    <div id="resultContent"></div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="downloadResult()" style="flex:1;">📸 Télécharger</button>
+      <button onclick="copyResultImage()" style="flex:1;">📋 Copier l'image</button>
+      <button onclick="closeResultModal()" style="background:#333;">✖</button>
+    </div>
+  </div>
+</div>
 
 <header style="position:relative;">
   <h1>👻 Esprits Fortnite</h1>
@@ -2674,22 +2674,6 @@ async function exportImage() {
 displaySpirits();
 
 updateStats()
-
-  /* ===== MODE CHASSE ===== */
-function getHuntTarget() {
-  const missing = [];
-
-  spirits.forEach(sprite => {
-    sprite.variants.forEach(variant => {
-      const id = getId(sprite.name, variant[0]);
-      if (getStatus(id) === 0) {
-        missing.push({
-          name: sprite.name,
-          variant: variant[0],
-          rarity: sprite.rarity,
-          score: { "Rare": 1, "Épique": 2, "Légendaire": 3, "Mythique": 4 }[sprite.rarity]
-        });
-      }
     });
   });
 
@@ -2810,25 +2794,6 @@ async function copyResultImage() {
     downloadResult();
   }
 }
-
-
-/* ===== MODE CHASSE ===== */
-function getHuntTarget() {
-  const missing = [];
-
-  spirits.forEach(sprite => {
-    sprite.variants.forEach(variant => {
-      const id = getId(sprite.name, variant[0]);
-      if (getStatus(id) === 0) {
-        missing.push({
-          name: sprite.name,
-          variant: variant[0],
-          rarity: sprite.rarity,
-          score: { "Rare": 1, "Épique": 2, "Légendaire": 3, "Mythique": 4 }[sprite.rarity]
-        });
-      }
-    });
-  });
 
   missing.sort((a, b) => b.score - a.score);
   const top5 = missing.slice(0, 5);
