@@ -1541,17 +1541,26 @@ function clickVariant(id) {
   let status = getStatus(id);
   status++;
   if (status > 3) status = 0;
+
+  // Sauvegarder l'ancien état pour détecter la complétion
+  const oldStatus = getStatus(id);
   collection[id] = status;
   saveCollection();
+
+  // Vérifier si UN esprit est devenu complet (pas déjà complet)
+  spirits.forEach(sprite => {
+    const isComplete = sprite.variants.every(v => getStatus(getId(sprite.name, v[0])) !== 0);
+    const wasComplete = sprite.variants.every(v => {
+      const vid = getId(sprite.name, v[0]);
+      if (vid === id) return oldStatus !== 0;
+      return getStatus(vid) !== 0;
+    });
+    if (isComplete && !wasComplete) celebrate();
+  });
+
   displaySpirits();
   updateStats();
   updateRarityBars();
-
-  // Confettis si un esprit est complet
-  spirits.forEach(sprite => {
-    const allDone = sprite.variants.every(v => getStatus(getId(sprite.name, v[0])) !== 0);
-    if (allDone) celebrate();
-  });
 }   
 
 
