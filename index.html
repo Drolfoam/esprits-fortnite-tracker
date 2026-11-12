@@ -735,6 +735,21 @@ tr:hover {
   padding-bottom: 12px;
   border-bottom: 2px solid rgba(100,180,255,0.3);
 }   
+
+    #resultModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75);
+  z-index: 3000;
+  justify-content: center;
+  align-items: center;
+}
+
+#resultModal.active {
+  display: flex;
+}   
       
   </style>
 </head>
@@ -778,6 +793,19 @@ tr:hover {
   <h3>Compteurs par variante</h3>
   <div class="variant-counters" id="variantCounters">
     <!-- Rempli par JS -->
+
+    <!-- Modal Chasse / Comparateur -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal" style="max-width:700px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
+    <h2 id="resultTitle" style="margin-bottom:15px;"></h2>
+    <div id="resultContent"></div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="downloadResult()" style="flex:1;">📸 Télécharger</button>
+      <button onclick="copyResultImage()" style="flex:1;">📋 Copier l'image</button>
+      <button onclick="closeResultModal()" style="background:#333;">✖</button>
+    </div>
+  </div>
+</div>   
   </div>
 </div>   
 
