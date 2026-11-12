@@ -1508,28 +1508,21 @@ CLIC
 */
 
 function clickVariant(id) {
-
-  let status =
-    getStatus(id);
-
+  let status = getStatus(id);
   status++;
-
-  if (status > 3) {
-
-    status = 0;
-
-  }
-
-  collection[id] =
-    status;
-
+  if (status > 3) status = 0;
+  collection[id] = status;
   saveCollection();
-
   displaySpirits();
-
   updateStats();
+  updateRarityBars();
 
-}
+  // Confettis si un esprit est complet
+  spirits.forEach(sprite => {
+    const allDone = sprite.variants.every(v => getStatus(getId(sprite.name, v[0])) !== 0);
+    if (allDone) celebrate();
+  });
+}   
 
 
 /*
