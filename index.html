@@ -770,6 +770,19 @@ tr:hover {
 <div class="sidebar" id="sidebar">
   <div class="sidebar-title">👻 Filtres</div>
 
+      <!-- Modal Chasse / Comparateur -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal" style="max-width:700px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
+    <h2 id="resultTitle" style="margin-bottom:15px;"></h2>
+    <div id="resultContent"></div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="downloadResult()" style="flex:1;">📸 Télécharger</button>
+      <button onclick="copyResultImage()" style="flex:1;">📋 Copier l'image</button>
+      <button onclick="closeResultModal()" style="background:#333;">✖</button>
+    </div>
+  </div>
+</div>   
+
   <h3>Statut</h3>
   <button class="filter-btn selected" data-filter="status" data-value="tous" onclick="setFilter('status','tous')">Tous</button>
 <button class="filter-btn" data-filter="status" data-value="manquants" onclick="setFilter('status','manquants')">⚪ Manquants</button>
@@ -792,20 +805,7 @@ tr:hover {
 
   <h3>Compteurs par variante</h3>
   <div class="variant-counters" id="variantCounters">
-    <!-- Rempli par JS -->
-
-    <!-- Modal Chasse / Comparateur -->
-<div class="modal-overlay" id="resultModal">
-  <div class="modal" style="max-width:700px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
-    <h2 id="resultTitle" style="margin-bottom:15px;"></h2>
-    <div id="resultContent"></div>
-    <div style="display:flex;gap:10px;margin-top:20px;">
-      <button onclick="downloadResult()" style="flex:1;">📸 Télécharger</button>
-      <button onclick="copyResultImage()" style="flex:1;">📋 Copier l'image</button>
-      <button onclick="closeResultModal()" style="background:#333;">✖</button>
-    </div>
-  </div>
-</div>   
+    <!-- Rempli par JS -->   
   </div>
 </div>   
 
@@ -2706,27 +2706,141 @@ function getHuntTarget() {
 }
 
 
-/* ===== CODE DE COLLECTION ===== */
-function generateCode() {
-  let code = "";
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let letterIndex = 0;
-
-  spirits.forEach(sprite => {
-    let spriteCode = letters[letterIndex] + " = ";
-    sprite.variants.forEach(variant => {
-      const s = getStatus(getId(sprite.name, variant[0]));
-      const icon = s === 1 ? "O" : s === 2 ? "M" : s === 3 ? "P" : "-";
-      spriteCode += icon + " ";
-    });
-    code += spriteCode + "\n";
-    letterIndex++;
-  });
-
-  navigator.clipboard.writeText(code.trim());
-  alert("✅ Code copié !\n\nLégende :\nO = Obtenu\nM = Maîtrisé\nP = Perdu\n- = Manquant");
+/* ===== MODAL RÉSULTAT ===== */
+function openResultModal(title, html) {
+  document.getElementById("resultTitle").textContent = title;
+  document.getElementById("resultContent").innerHTML = html;
+  document.getElementById("resultModal").classList.add("active");
 }
 
+function closeResultModal() {
+  document.getElementById("resultModal").classList.remove("active");
+}
+
+function downloadResult() {
+  const content = document.getElementById("resultContent");
+  const scale = 2;
+  const pad = 30;
+  const w = 650;
+  const h = Math.max(content.scrollHeight + 80, 300);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w * scale;
+  canvas.height = h * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = "#0a1f4d";
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 22px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(document.getElementById("resultTitle").textContent, w / 2, pad + 20);
+
+  ctx.fillStyle = "#d9edff";
+  ctx.font = "14px Arial";
+  ctx.textAlign = "left";
+
+  const lines = content.innerText.split("\n").filter(l => l.trim());
+  lines.forEach((line, i) => {
+    ctx.fillText(line, pad, pad + 50 + i * 22, w - pad * 2);
+  });
+
+  ctx.fillStyle = "#7192bd";
+  ctx.font = "12px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("drolfoam.github.io/esprits-fortnite-tracker/", w / 2, h - 15);
+
+  const a = document.createElement("a");
+  a.href = canvas.toDataURL("image/png");
+  a.download = "resultat-esprits.png";
+  a.click();
+}
+
+async function copyResultImage() {
+  const content = document.getElementById("resultContent");
+  const scale = 2;
+  const pad = 30;
+  const w = 650;
+  const h = Math.max(content.scrollHeight + 80, 300);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w * scale;
+  canvas.height = h * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = "#0a1f4d";
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 22px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(document.getElementById("resultTitle").textContent, w / 2, pad + 20);
+
+  ctx.fillStyle = "#d9edff";
+  ctx.font = "14px Arial";
+  ctx.textAlign = "left";
+
+  const lines = content.innerText.split("\n").filter(l => l.trim());
+  lines.forEach((line, i) => {
+    ctx.fillText(line, pad, pad + 50 + i * 22, w - pad * 2);
+  });
+
+  ctx.fillStyle = "#7192bd";
+  ctx.font = "12px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("drolfoam.github.io/esprits-fortnite-tracker/", w / 2, h - 15);
+
+  try {
+    const blob = await new Promise(r => canvas.toBlob(r, "image/png"));
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+    alert("✅ Image copiée ! Colle dans Discord avec Ctrl+V.");
+  } catch {
+    downloadResult();
+  }
+}
+
+
+/* ===== MODE CHASSE ===== */
+function getHuntTarget() {
+  const missing = [];
+
+  spirits.forEach(sprite => {
+    sprite.variants.forEach(variant => {
+      const id = getId(sprite.name, variant[0]);
+      if (getStatus(id) === 0) {
+        missing.push({
+          name: sprite.name,
+          variant: variant[0],
+          rarity: sprite.rarity,
+          score: { "Rare": 1, "Épique": 2, "Légendaire": 3, "Mythique": 4 }[sprite.rarity]
+        });
+      }
+    });
+  });
+
+  missing.sort((a, b) => b.score - a.score);
+  const top5 = missing.slice(0, 5);
+
+  let html = "";
+  top5.forEach((t, i) => {
+    const c = { "Rare": "#60A6FF", "Épique": "#B14BF4", "Légendaire": "#FF9E2C", "Mythique": "#FF3E3E" }[t.rarity];
+    html += `<div style="display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:8px;background:rgba(0,0,0,0.3);border-radius:10px;border-left:4px solid ${c};">
+      <span style="font-size:24px;font-weight:bold;color:${c};">${i + 1}.</span>
+      <div><strong style="color:#fff;font-size:16px;">${t.name}</strong><br><span style="color:#bcdcff;">${t.variant}</span></div>
+      <span style="margin-left:auto;padding:4px 12px;border-radius:8px;background:${c}22;color:${c};font-size:14px;font-weight:bold;">${t.rarity}</span>
+    </div>`;
+  });
+
+  if (top5.length === 0) html = `<p style="color:#43f58b;text-align:center;font-size:18px;">🎉 Tout est collectionné !</p>`;
+
+  openResultModal("🎯 Prochaines cibles", html);
+}
+
+
+/* ===== COMPARATEUR ===== */
 function compareCollections() {
   const code1 = prompt("Colle TON code :");
   const code2 = prompt("Colle le code de ton AMI :");
@@ -2753,10 +2867,8 @@ function compareCollections() {
   const coll1 = parseCode(code1);
   const coll2 = parseCode(code2);
 
-  let html = `<div style="max-width:1200px;margin:20px auto;padding:20px;border-radius:16px;background:rgba(8,32,78,0.9);border:1px solid rgba(100,180,255,0.3);">
-    <h3 style="color:#fff;margin-bottom:15px;">⚔️ Comparaison</h3>
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-    <tr style="background:#1265d8;color:#fff;"><th style="padding:10px;">Esprit</th><th style="padding:10px;">Toi</th><th style="padding:10px;">Ami</th><th style="padding:10px;">Trade</th></tr>`;
+  let html = `<table style="width:100%;border-collapse:collapse;font-size:14px;">
+    <tr style="background:#1265d8;color:#fff;"><th style="padding:10px;text-align:left;">Esprit</th><th style="padding:10px;">Toi</th><th style="padding:10px;">Ami</th><th style="padding:10px;">Trade</th></tr>`;
 
   spirits.forEach(sprite => {
     sprite.variants.forEach(variant => {
@@ -2775,10 +2887,9 @@ function compareCollections() {
     });
   });
 
-  html += `</table></div>`;
-  document.getElementById("spiritsContainer").insertAdjacentHTML("afterbegin", html);
-}
-
+  html += `</table>`;
+  openResultModal("⚔️ Comparaison de collections", html);
+}   
 
 /* ===== BARRES PAR RARETÉ ===== */
 function updateRarityBars() {
