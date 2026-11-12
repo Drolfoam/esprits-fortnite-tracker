@@ -2674,29 +2674,6 @@ async function exportImage() {
 displaySpirits();
 
 updateStats()
-    });
-  });
-
-  missing.sort((a, b) => b.score - a.score);
-  const top5 = missing.slice(0, 5);
-
-  let html = `<div style="max-width:1200px;margin:20px auto;padding:20px;border-radius:16px;background:rgba(8,32,78,0.9);border:1px solid rgba(255,158,44,0.4);">
-    <h3 style="color:#FF9E2C;margin-bottom:15px;">🎯 Prochaines cibles</h3>`;
-
-  top5.forEach((t, i) => {
-    const c = { "Rare": "#60A6FF", "Épique": "#B14BF4", "Légendaire": "#FF9E2C", "Mythique": "#FF3E3E" }[t.rarity];
-    html += `<div style="display:flex;align-items:center;gap:12px;padding:10px;margin-bottom:6px;background:rgba(0,0,0,0.3);border-radius:10px;border-left:4px solid ${c};">
-      <span style="font-size:22px;font-weight:bold;color:${c};">${i + 1}.</span>
-      <div><strong style="color:#fff;">${t.name}</strong> <span style="color:#bcdcff;">— ${t.variant}</span></div>
-      <span style="margin-left:auto;padding:4px 10px;border-radius:8px;background:${c}22;color:${c};font-size:13px;font-weight:bold;">${t.rarity}</span>
-    </div>`;
-  });
-
-  if (top5.length === 0) html += `<p style="color:#43f58b;text-align:center;">🎉 Tout est collectionné !</p>`;
-  html += `</div>`;
-
-  document.getElementById("spiritsContainer").insertAdjacentHTML("afterbegin", html);
-}
 
 
 /* ===== MODAL RÉSULTAT ===== */
@@ -2795,6 +2772,24 @@ async function copyResultImage() {
   }
 }
 
+  /* ===== MODE CHASSE ===== */
+function getHuntTarget() {
+  const missing = [];
+
+  spirits.forEach(sprite => {
+    sprite.variants.forEach(variant => {
+      const id = getId(sprite.name, variant[0]);
+      if (getStatus(id) === 0) {
+        missing.push({
+          name: sprite.name,
+          variant: variant[0],
+          rarity: sprite.rarity,
+          score: { "Rare": 1, "Épique": 2, "Légendaire": 3, "Mythique": 4 }[sprite.rarity]
+        });
+      }
+    });
+  });
+
   missing.sort((a, b) => b.score - a.score);
   const top5 = missing.slice(0, 5);
 
@@ -2811,7 +2806,7 @@ async function copyResultImage() {
   if (top5.length === 0) html = `<p style="color:#43f58b;text-align:center;font-size:18px;">🎉 Tout est collectionné !</p>`;
 
   openResultModal("🎯 Prochaines cibles", html);
-}
+}   
 
 
 /* ===== COMPARATEUR ===== */
