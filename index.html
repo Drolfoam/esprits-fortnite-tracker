@@ -1398,7 +1398,7 @@ function displaySpirits() {
 
     const grid = section.querySelector(".variants-grid");
 
-    filteredVariants.forEach(variant => {
+    filteredVariants.forEach((variant, index) => {   
       const variantName = variant[0];
       const image = variant[1];
       const id = getId(sprite.name, variantName);
@@ -1423,6 +1423,17 @@ function displaySpirits() {
         <div class="variant-name">${variantName}</div>
         <div class="status">${getStatusName(status)}</div>
       `;
+
+      .variant-card {
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}   
+
+  card.style.animationDelay = (index * 0.05) + "s";   
 
       card.addEventListener("click", () => clickVariant(id));
       grid.appendChild(card);
