@@ -2773,6 +2773,36 @@ async function copyResultImage() {
   }
 }
 
+  /* ===== CODE DE COLLECTION ===== */
+function generateCode() {
+  let code = "";
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let letterIndex = 0;
+
+  spirits.forEach(sprite => {
+    let spriteCode = letters[letterIndex] + " = ";
+    sprite.variants.forEach(variant => {
+      const s = getStatus(getId(sprite.name, variant[0]));
+      const icon = s === 1 ? "O" : s === 2 ? "M" : s === 3 ? "P" : "-";
+      spriteCode += icon + " ";
+    });
+    code += spriteCode + "\n";
+    letterIndex++;
+  });
+
+  code = code.trim();
+
+  const ta = document.createElement("textarea");
+  ta.value = code;
+  ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;";
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand("copy");
+  document.body.removeChild(ta);
+
+  alert("✅ Code copié !\n\n" + code + "\n\nLégende :\nO = Obtenu\nM = Maîtrisé\nP = Perdu\n- = Manquant");
+}   
+
   /* ===== MODE CHASSE ===== */
 function getHuntTarget() {
   const missing = [];
