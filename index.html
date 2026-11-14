@@ -2694,8 +2694,9 @@ function downloadResult() {
   const content = document.getElementById("resultContent");
   const scale = 2;
   const pad = 30;
-  const w = 650;
-  const h = Math.max(content.scrollHeight + 80, 300);
+  const w = 900;
+  const rows = content.querySelectorAll("tr");
+  const h = Math.max(rows.length * 36 + 100, 300);
 
   const canvas = document.createElement("canvas");
   canvas.width = w * scale;
@@ -2706,18 +2707,34 @@ function downloadResult() {
   ctx.fillStyle = "#0a1f4d";
   ctx.fillRect(0, 0, w, h);
 
+  // Titre
   ctx.fillStyle = "#fff";
-  ctx.font = "bold 22px Arial";
+  ctx.font = "bold 24px Arial";
   ctx.textAlign = "center";
   ctx.fillText(document.getElementById("resultTitle").textContent, w / 2, pad + 20);
 
-  ctx.fillStyle = "#d9edff";
-  ctx.font = "14px Arial";
-  ctx.textAlign = "left";
+  // Colonnes
+  const colX = [pad, pad + 400, pad + 520, pad + 640];
+  const colW = [400, 120, 120, 200];
+  let y = pad + 55;
 
-  const lines = content.innerText.split("\n").filter(l => l.trim());
-  lines.forEach((line, i) => {
-    ctx.fillText(line, pad, pad + 50 + i * 22, w - pad * 2);
+  rows.forEach((row, i) => {
+    const cells = row.querySelectorAll("th, td");
+    ctx.font = (i === 0 ? "bold 18px Arial" : "16px Arial");
+    ctx.fillStyle = i === 0 ? "#fff" : "#d9edff";
+    ctx.textAlign = "left";
+
+    if (i === 0) {
+      ctx.fillStyle = "#1265d8";
+      ctx.fillRect(pad, y - 18, w - pad * 2, 28);
+      ctx.fillStyle = "#fff";
+    }
+
+    cells.forEach((cell, ci) => {
+      ctx.fillText(cell.textContent.trim(), colX[ci] || pad, y);
+    });
+
+    y += 36;
   });
 
   ctx.fillStyle = "#7192bd";
@@ -2729,7 +2746,7 @@ function downloadResult() {
   a.href = canvas.toDataURL("image/png");
   a.download = "resultat-esprits.png";
   a.click();
-}
+}   
 
 async function copyResultImage() {
   const content = document.getElementById("resultContent");
