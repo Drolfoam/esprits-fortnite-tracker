@@ -1142,7 +1142,7 @@ const spirits = [
     variants: [
       ["Normal", "images/wayfinder_basic.webp"],
       ["Chanceux", "images/wayfinder_jeweled.webp"],
-      ["Maudit", "images/wayfinder_cursed.webp"],
+      ["Maudit", "images/wayfinder_cursed.webp"]
     ]
   },
 
@@ -1152,7 +1152,7 @@ const spirits = [
     variants: [
       ["Normal", "images/barryofish_basic.webp"],
       ["Chanceux", "images/barryofish_jeweled.webp"],
-      ["Maudit", "images/barryofish_cursed.webp"],
+      ["Maudit", "images/barryofish_cursed.webp"]
     ]
   },
 
@@ -1162,7 +1162,7 @@ const spirits = [
     variants: [
       ["Normal", "images/repete_basic.webp"],
       ["Chanceux", "images/repete_jeweled.webp"],
-      ["Maudit", "images/repete_cursed.webp"],
+      ["Maudit", "images/repete_cursed.webp"]
     ]
   },
 
@@ -1172,7 +1172,7 @@ const spirits = [
     variants: [
       ["Normal", "images/halfpeeld_basic.webp"],
       ["Chanceux", "images/halfpeeld_jeweled.webp"],
-      ["Maudit", "images/halfpeeld_cursed.webp"],
+      ["Maudit", "images/halfpeeld_cursed.webp"]
     ]
   },
 
@@ -1182,7 +1182,7 @@ const spirits = [
     variants: [
       ["Normal", "images/lilsquibbly_basic.webp"],
       ["Chanceux", "images/lilsquibbly_jeweled.webp"],
-      ["Maudit", "images/lilsquibbly_cursed.webp"],
+      ["Maudit", "images/lilsquibbly_cursed.webp"]
     ]
   },
 
@@ -1192,7 +1192,7 @@ const spirits = [
     variants: [
       ["Normal", "images/exmarks_basic.webp"],
       ["Chanceux", "images/exmarks_jeweled.webp"],
-      ["Maudit", "images/exmarks_cursed.webp"],
+      ["Maudit", "images/exmarks_cursed.webp"]
     ]
   },
 
@@ -1202,7 +1202,7 @@ const spirits = [
     variants: [
       ["Normal", "images/kelper_basic.webp"],
       ["Chanceux", "images/kelper_jeweled.webp"],
-      ["Maudit", "images/kelper_cursed.webp"],
+      ["Maudit", "images/kelper_cursed.webp"]
     ]
   },
 
@@ -1212,7 +1212,7 @@ const spirits = [
     variants: [
       ["Normal", "images/chester_basic.webp"],
       ["Chanceux", "images/chester_jeweled.webp"],
-      ["Maudit", "images/chester_cursed.webp"],
+      ["Maudit", "images/chester_cursed.webp"]
     ]
   },
 
@@ -1222,7 +1222,7 @@ const spirits = [
     variants: [
       ["Normal", "images/lilflacko_basic.webp"],
       ["Chanceux", "images/lilflacko_jeweled.webp"],
-      ["Maudit", "images/lilflacko_cursed.webp"],
+      ["Maudit", "images/lilflacko_cursed.webp"]
     ]
   },
 
@@ -1240,7 +1240,7 @@ const spirits = [
     variants: [
       ["Normal", "images/liluzivertjr_basic.webp"],
       ["Chanceux", "images/liluzivertjr_jeweled.webp"],
-      ["Maudit", "images/liluzivertjr_cursed.webp"],
+      ["Maudit", "images/liluzivertjr_cursed.webp"]
     ]
   },
 
@@ -1250,7 +1250,7 @@ const spirits = [
     variants: [
       ["Normal", "images/plundarrgh_basic.webp"],
       ["Chanceux", "images/plundarrgh_jeweled.webp"],
-      ["Maudit", "images/plundarrgh_cursed.webp"],
+      ["Maudit", "images/plundarrgh_cursed.webp"]
     ]
   },
 
@@ -1260,7 +1260,7 @@ const spirits = [
     variants: [
       ["Normal", "images/minimiku_basic.webp"],
       ["Chanceux", "images/minimiku_jeweled.webp"],
-      ["Maudit", "images/minimiku_cursed.webp"],
+      ["Maudit", "images/minimiku_cursed.webp"]
     ]
   },
 
@@ -1276,9 +1276,7 @@ const spirits = [
     name: "✨?",
     rarity: "Mythique",
     variants: [
-      ["Normal", "images/zee_basic.webp"],
-      ["Chanceux", "images/zee_jeweled.webp"],
-      ["Maudit", "images/zee_cursed.webp"],
+      ["Normal", "images/zee_basic.webp"]
     ]
   }
 
@@ -1599,6 +1597,7 @@ function clickVariant(id) {
   displaySpirits();
   updateStats();
   updateRarityBars();
+  updateVariantCounters();
 }   
 
 
@@ -1804,7 +1803,9 @@ function resetCollection() {
 
   updateStats();
 
-  updateRarityBars();   
+  updateRarityBars();  
+
+  updateVariantCounters();
 
 }
 
