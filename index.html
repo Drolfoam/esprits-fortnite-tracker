@@ -1529,6 +1529,8 @@ function displaySpirits() {
 
     container.appendChild(section);
   });
+
+    document.querySelectorAll(".variants-grid").forEach(g => g.style.gridTemplateColumns = `repeat(auto-fill, minmax(${settings.cardSize}px, 1fr))`);   
 }   
   
 
