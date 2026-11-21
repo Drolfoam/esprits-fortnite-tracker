@@ -3101,29 +3101,38 @@ async function removeBackground() {
   document.getElementById("bgFileInput").value = "";
   document.getElementById("bgPreview").textContent = "Aperçu du fond";
   const old = document.getElementById("customBgVideo"); if (old) old.remove();
-  document.body.style.background = "";
+  const oldImg = document.getElementById("customBgImage"); if (oldImg) oldImg.remove();
   const ov = document.getElementById("bgOverlay"); if (ov) ov.remove();
   await dbDelete("background");
-}
+}   
 
 function renderBackground() {
   if (!settings.background) return;
   const old = document.getElementById("customBgVideo"); if (old) old.remove();
+  const oldImg = document.getElementById("customBgImage"); if (oldImg) oldImg.remove();
+  const ov = document.getElementById("bgOverlay"); if (ov) ov.remove();
+
   const url = URL.createObjectURL(settings.background.blob);
   const op = settings.bgOpacity / 100;
+
   if (settings.background.type === "video") {
     const v = document.createElement("video");
     v.id = "customBgVideo"; v.src = url; v.autoplay = true; v.loop = true; v.muted = true;
-    v.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:${op};`;
+    v.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:${op};`;
     document.body.prepend(v);
-    document.body.style.background = "none";
   } else {
-    document.body.style.background = `url(${url}) no-repeat center center / cover fixed`;
-    let ov = document.getElementById("bgOverlay");
-    if (!ov) { ov = document.createElement("div"); ov.id = "bgOverlay"; ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"; document.body.prepend(ov); }
-    ov.style.background = `rgba(6,19,47,${1 - op})`;
+    const img = document.createElement("img");
+    img.id = "customBgImage"; img.src = url;
+    img.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:${op};`;
+    document.body.prepend(img);
   }
-}
+
+  // Overlay sombre par-dessus
+  const overlay = document.createElement("div");
+  overlay.id = "bgOverlay";
+  overlay.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;background:rgba(6,19,47,${1 - op});`;
+  document.body.prepend(overlay);
+}   
 
 function updateBgPreview() {
   if (!settings.background) return;
@@ -3164,8 +3173,11 @@ function selectSoundKey(key) {
   document.querySelectorAll("[id^='soundInput_']").forEach(el => el.style.display = "none");
   const inp = document.getElementById("soundInput_" + key);
   inp.style.display = "block";
+  // Rendre l'input visible pour que le click marche
+  inp.style.position = "relative";
+  inp.style.opacity = "1";
   inp.click();
-}
+}   
 
 async function importSound(key, el) {
   const f = el.files[0]; if (!f) return;
@@ -3231,7 +3243,17 @@ async function resetSettings() {
 }
 
 /* ===== MODAL ===== */
-function openSettings() { document.getElementById("settingsModal").classList.add("active"); updateBgPreview(); renderSoundList(); }
+function openSettings() {
+  // Fermer la sidebar si elle est ouverte
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar.classList.contains("active")) {
+    toggleSidebar();
+  }
+  document.getElementById("settingsModal").classList.add("active");
+  updateBgPreview();
+  renderSoundList();
+}   
+  
 function closeSettings() { document.getElementById("settingsModal").classList.remove("active"); }
 
 /* ===== INTÉGRER LES SONS ===== */
