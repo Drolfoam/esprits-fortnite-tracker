@@ -3147,6 +3147,7 @@ function updateBgPreview() {
 const soundLabels = { complet:"🎉 Esprit complété", clic:"👆 Clic", reset:"🗑️ Reset", chasse:"🎯 Mode chasse", comparaison:"⚔️ Comparaison" };
 
 function renderSoundList() {
+function renderSoundList() {
   const c = document.getElementById("soundList");
   c.innerHTML = "";
   Object.keys(soundLabels).forEach(key => {
@@ -3156,27 +3157,15 @@ function renderSoundList() {
     d.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
         <span style="color:#d9edff;font-size:14px;font-weight:bold;">${soundLabels[key]}</span>
-        <span style="color:${has ? '#43f58b' : '#8caed8'};font-size:12px;">${has ? "✅" : "⚪"}</span>
+        <span style="color:${has ? '#43f58b' : '#8caed8'};font-size:12px;">${has ? "✅ Chargé" : "⚪ Aucun"}</span>
       </div>
-      <div style="display:flex;gap:6px;">
-        <button onclick="selectSoundKey('${key}')" style="flex:1;padding:8px;font-size:13px;">📁 Changer</button>
-        ${has ? `<button onclick="removeSound('${key}')" style="padding:8px 12px;font-size:13px;background:#333;">❌</button>` : ""}
-      </div>
-      <div id="soundInput_${key}" style="display:none;margin-top:8px;">
-        <input type="file" accept="audio/mpeg,audio/mp3" style="width:100%;font-size:12px;padding:8px;" onchange="importSound('${key}', this)">
+      <div style="display:flex;gap:6px;align-items:center;">
+        <label for="soundFile_${key}" style="flex:1;padding:8px;font-size:13px;text-align:center;background:#1265d8;border-radius:8px;cursor:pointer;color:#fff;">📁 Changer</label>
+        <input type="file" id="soundFile_${key}" accept="audio/mpeg,audio/mp3" style="display:none;" onchange="importSound('${key}', this)">
+        ${has ? `<button onclick="removeSound('${key}')" style="padding:8px 12px;font-size:13px;background:#333;border-radius:8px;cursor:pointer;color:#fff;">❌</button>` : ""}
       </div>`;
     c.appendChild(d);
   });
-}
-
-function selectSoundKey(key) {
-  document.querySelectorAll("[id^='soundInput_']").forEach(el => el.style.display = "none");
-  const inp = document.getElementById("soundInput_" + key);
-  inp.style.display = "block";
-  // Rendre l'input visible pour que le click marche
-  inp.style.position = "relative";
-  inp.style.opacity = "1";
-  inp.click();
 }   
 
 async function importSound(key, el) {
