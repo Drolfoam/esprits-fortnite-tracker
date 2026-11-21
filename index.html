@@ -1137,6 +1137,51 @@ tr:hover {
   Esprits Fortnite — Collection Tracker
 </footer>   
 
+  <!-- Modal Paramètres -->
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
+  <div class="modal" style="max-width:550px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
+    <h2>⚙️ Paramètres</h2>
+
+    <h3 style="color:#d9edff;margin:18px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
+      Fond personnalisé
+    </h3>
+    <p style="color:#8caed8;font-size:13px;margin-bottom:10px;">Image (.png, .jpg, .webp) ou vidéo (.mp4) en fond.</p>
+    <input type="file" id="bgFileInput" accept="image/*,video/mp4" style="width:100%;margin-bottom:8px;">
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button onclick="applyBackground()" style="flex:1;">✅ Appliquer</button>
+      <button onclick="removeBackground()" style="flex:1;background:#333;">❌ Retirer</button>
+    </div>
+    <div id="bgPreview" style="width:100%;height:120px;border-radius:10px;overflow:hidden;border:1px solid rgba(100,180,255,0.3);display:flex;align-items:center;justify-content:center;color:#8caed8;font-size:13px;">Aperçu du fond</div>
+
+    <h3 style="color:#d9edff;margin:25px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
+      Effets sonores
+    </h3>
+    <p style="color:#8caed8;font-size:13px;margin-bottom:12px;">Choisis quel son changer, puis importe un .mp3.</p>
+    <div id="soundList" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    <h3 style="color:#d9edff;margin:25px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
+      Apparence
+    </h3>
+    <label style="color:#d9edff;font-size:14px;display:block;margin-bottom:6px;">Vitesse des confettis</label>
+    <input type="range" id="confettiSpeed" min="1" max="5" value="2" style="width:100%;margin-bottom:5px;">
+    <span id="confettiSpeedVal" style="color:#8caed8;font-size:12px;">2x</span>
+
+    <label style="color:#d9edff;font-size:14px;display:block;margin:15px 0 6px;">Opacité du fond</label>
+    <input type="range" id="bgOpacity" min="10" max="100" value="40" style="width:100%;margin-bottom:5px;">
+    <span id="bgOpacityVal" style="color:#8caed8;font-size:12px;">40%</span>
+
+    <label style="color:#d9edff;font-size:14px;display:block;margin:15px 0 6px;">Taille des cartes</label>
+    <select id="cardSize" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(100,180,255,0.3);background:rgba(4,17,42,0.85);color:white;">
+      <option value="150">Petite (150px)</option>
+      <option value="180" selected>Moyenne (180px)</option>
+      <option value="220">Grande (220px)</option>
+    </select>
+
+    <button onclick="resetSettings()" style="width:100%;margin-top:25px;background:#8B0000;">🗑️ Tout réinitialiser</button>
+    <button onclick="closeSettings()" style="width:100%;margin-top:10px;background:#333;">✖ Fermer</button>
+  </div>
+</div>   
+
 <script>
 
 /*
@@ -3147,7 +3192,6 @@ function updateBgPreview() {
 const soundLabels = { complet:"🎉 Esprit complété", clic:"👆 Clic", reset:"🗑️ Reset", chasse:"🎯 Mode chasse", comparaison:"⚔️ Comparaison" };
 
 function renderSoundList() {
-function renderSoundList() {
   const c = document.getElementById("soundList");
   c.innerHTML = "";
   Object.keys(soundLabels).forEach(key => {
@@ -3262,51 +3306,6 @@ compareCollections = function() { _origCompare(); playSound("comparaison"); };
 initSettings();   
 
 </script>
-
-  <!-- Modal Paramètres -->
-<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
-  <div class="modal" style="max-width:550px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
-    <h2>⚙️ Paramètres</h2>
-
-    <h3 style="color:#d9edff;margin:18px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
-      Fond personnalisé
-    </h3>
-    <p style="color:#8caed8;font-size:13px;margin-bottom:10px;">Image (.png, .jpg, .webp) ou vidéo (.mp4) en fond.</p>
-    <input type="file" id="bgFileInput" accept="image/*,video/mp4" style="width:100%;margin-bottom:8px;">
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
-      <button onclick="applyBackground()" style="flex:1;">✅ Appliquer</button>
-      <button onclick="removeBackground()" style="flex:1;background:#333;">❌ Retirer</button>
-    </div>
-    <div id="bgPreview" style="width:100%;height:120px;border-radius:10px;overflow:hidden;border:1px solid rgba(100,180,255,0.3);display:flex;align-items:center;justify-content:center;color:#8caed8;font-size:13px;">Aperçu du fond</div>
-
-    <h3 style="color:#d9edff;margin:25px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
-      Effets sonores
-    </h3>
-    <p style="color:#8caed8;font-size:13px;margin-bottom:12px;">Choisis quel son changer, puis importe un .mp3.</p>
-    <div id="soundList" style="display:flex;flex-direction:column;gap:10px;"></div>
-
-    <h3 style="color:#d9edff;margin:25px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
-      Apparence
-    </h3>
-    <label style="color:#d9edff;font-size:14px;display:block;margin-bottom:6px;">Vitesse des confettis</label>
-    <input type="range" id="confettiSpeed" min="1" max="5" value="2" style="width:100%;margin-bottom:5px;">
-    <span id="confettiSpeedVal" style="color:#8caed8;font-size:12px;">2x</span>
-
-    <label style="color:#d9edff;font-size:14px;display:block;margin:15px 0 6px;">Opacité du fond</label>
-    <input type="range" id="bgOpacity" min="10" max="100" value="40" style="width:100%;margin-bottom:5px;">
-    <span id="bgOpacityVal" style="color:#8caed8;font-size:12px;">40%</span>
-
-    <label style="color:#d9edff;font-size:14px;display:block;margin:15px 0 6px;">Taille des cartes</label>
-    <select id="cardSize" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(100,180,255,0.3);background:rgba(4,17,42,0.85);color:white;">
-      <option value="150">Petite (150px)</option>
-      <option value="180" selected>Moyenne (180px)</option>
-      <option value="220">Grande (220px)</option>
-    </select>
-
-    <button onclick="resetSettings()" style="width:100%;margin-top:25px;background:#8B0000;">🗑️ Tout réinitialiser</button>
-    <button onclick="closeSettings()" style="width:100%;margin-top:10px;background:#333;">✖ Fermer</button>
-  </div>
-</div>   
   
 </body>
 </html>
