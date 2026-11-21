@@ -790,6 +790,11 @@ tr:hover {
   <button class="filter-btn" data-filter="variant" data-value="Chanceux" onclick="setFilter('variant','Chanceux')">Chanceux</button>
   <button class="filter-btn" data-filter="variant" data-value="Maudit" onclick="setFilter('variant','Maudit')">Maudit</button>
 
+  <h3>⚙️ Paramètres</h3>
+<button class="filter-btn" onclick="openSettings()">Fond</button>
+<button class="filter-btn" onclick="openSettings()">Sons</button>
+<button class="filter-btn" onclick="openSettings()">Apparence</button>   
+
   <h3>Compteurs par variante</h3>
   <div class="variant-counters" id="variantCounters">
     <!-- Rempli par JS -->   
@@ -802,8 +807,8 @@ tr:hover {
     <h2 id="resultTitle" style="margin-bottom:15px;"></h2>
     <div id="resultContent"></div>
     <div style="display:flex;gap:10px;margin-top:20px;">
-      <button onclick="downloadResult()" style="flex:1;">📸 Télécharger</button>
-      <button onclick="copyResultImage()" style="flex:1;">📋 Copier l'image</button>
+      <button onclick="downloadResult()" style="flex:1;">Télécharger</button>
+      <button onclick="copyResultImage()" style="flex:1;">Copier l'image</button>
       <button onclick="closeResultModal()" style="background:#333;">✖</button>
     </div>
   </div>
@@ -2104,7 +2109,7 @@ async function exportImage() {
   ctx.textAlign = "left";
 
   ctx.fillText(
-    "👻 Ma collection d'esprits Fortnite",
+    "Ma collection d'esprits Fortnite",
     padding,
     padding + 42
   );
@@ -3029,8 +3034,268 @@ function celebrate() {
     else canvas.remove();
   }
   animate();
-}   
+} 
+
+  /* ===== INDEXEDDB ===== */
+const DB_NAME = "espritsSettings";
+let db;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains("settings")) d.createObjectStore("settings", { keyPath: "key" });
+    };
+    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    req.onerror = (e) => reject(e);
+  });
+}
+function dbSet(key, value) { return new Promise((res, rej) => { const tx = db.transaction("settings","readwrite"); tx.objectStore("settings").put({key, value}); tx.oncomplete = res; tx.onerror = rej; }); }
+function dbGet(key) { return new Promise((res, rej) => { const tx = db.transaction("settings","readonly"); const r = tx.objectStore("settings").get(key); r.onsuccess = () => res(r.result ? r.result.value : null); r.onerror = rej; }); }
+function dbDelete(key) { return new Promise((res, rej) => { const tx = db.transaction("settings","readwrite"); tx.objectStore("settings").delete(key); tx.oncomplete = res; tx.onerror = rej; }); }
+
+/* ===== ÉTAT ===== */
+let settings = { background: null, sounds: { complet:null, clic:null, reset:null, chasse:null, comparaison:null }, confettiSpeed:2, bgOpacity:40, cardSize:180 };
+let soundAudio = {};
+let bgFile = null;
+
+/* ===== INIT ===== */
+async function initSettings() {
+  await openDB();
+  const bg = await dbGet("background");
+  if (bg) { settings.background = bg; renderBackground(); }
+  for (const key of Object.keys(settings.sounds)) {
+    const blob = await dbGet("sound_" + key);
+    if (blob) { settings.sounds[key] = blob; soundAudio[key] = new Audio(URL.createObjectURL(blob)); }
+  }
+  const cs = await dbGet("confettiSpeed"); if (cs) settings.confettiSpeed = cs;
+  const bo = await dbGet("bgOpacity"); if (bo) settings.bgOpacity = bo;
+  const cz = await dbGet("cardSize"); if (cz) settings.cardSize = cz;
+  applyAppearance();
+  renderSoundList();
+  updateBgPreview();
+}
+
+/* ===== FOND ===== */
+document.getElementById("bgFileInput").addEventListener("change", function(e) {
+  bgFile = e.target.files[0];
+  if (!bgFile) return;
+  const url = URL.createObjectURL(bgFile);
+  const p = document.getElementById("bgPreview");
+  p.innerHTML = bgFile.type.startsWith("video")
+    ? `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`
+    : `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">`;
+});
+
+async function applyBackground() {
+  if (!bgFile) { alert("Choisis un fichier !"); return; }
+  settings.background = { type: bgFile.type.startsWith("video") ? "video" : "image", blob: bgFile };
+  await dbSet("background", settings.background);
+  renderBackground();
+  alert("✅ Fond appliqué !");
+}
+
+async function removeBackground() {
+  settings.background = null; bgFile = null;
+  document.getElementById("bgFileInput").value = "";
+  document.getElementById("bgPreview").textContent = "Aperçu du fond";
+  const old = document.getElementById("customBgVideo"); if (old) old.remove();
+  document.body.style.background = "";
+  const ov = document.getElementById("bgOverlay"); if (ov) ov.remove();
+  await dbDelete("background");
+}
+
+function renderBackground() {
+  if (!settings.background) return;
+  const old = document.getElementById("customBgVideo"); if (old) old.remove();
+  const url = URL.createObjectURL(settings.background.blob);
+  const op = settings.bgOpacity / 100;
+  if (settings.background.type === "video") {
+    const v = document.createElement("video");
+    v.id = "customBgVideo"; v.src = url; v.autoplay = true; v.loop = true; v.muted = true;
+    v.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;opacity:${op};`;
+    document.body.prepend(v);
+    document.body.style.background = "none";
+  } else {
+    document.body.style.background = `url(${url}) no-repeat center center / cover fixed`;
+    let ov = document.getElementById("bgOverlay");
+    if (!ov) { ov = document.createElement("div"); ov.id = "bgOverlay"; ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"; document.body.prepend(ov); }
+    ov.style.background = `rgba(6,19,47,${1 - op})`;
+  }
+}
+
+function updateBgPreview() {
+  if (!settings.background) return;
+  const url = URL.createObjectURL(settings.background.blob);
+  const p = document.getElementById("bgPreview");
+  p.innerHTML = settings.background.type === "video"
+    ? `<video src="${url}" autoplay loop muted style="width:100%;height:100%;object-fit:cover;"></video>`
+    : `<img src="${url}" style="width:100%;height:100%;object-fit:cover;">`;
+}
+
+/* ===== SONS ===== */
+const soundLabels = { complet:"🎉 Esprit complété", clic:"👆 Clic", reset:"🗑️ Reset", chasse:"🎯 Mode chasse", comparaison:"⚔️ Comparaison" };
+
+function renderSoundList() {
+  const c = document.getElementById("soundList");
+  c.innerHTML = "";
+  Object.keys(soundLabels).forEach(key => {
+    const has = !!settings.sounds[key];
+    const d = document.createElement("div");
+    d.style.cssText = "padding:12px;border-radius:10px;background:rgba(8,32,78,0.6);border:1px solid rgba(100,180,255,0.15);";
+    d.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="color:#d9edff;font-size:14px;font-weight:bold;">${soundLabels[key]}</span>
+        <span style="color:${has ? '#43f58b' : '#8caed8'};font-size:12px;">${has ? "✅" : "⚪"}</span>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button onclick="selectSoundKey('${key}')" style="flex:1;padding:8px;font-size:13px;">📁 Changer</button>
+        ${has ? `<button onclick="removeSound('${key}')" style="padding:8px 12px;font-size:13px;background:#333;">❌</button>` : ""}
+      </div>
+      <div id="soundInput_${key}" style="display:none;margin-top:8px;">
+        <input type="file" accept="audio/mpeg,audio/mp3" style="width:100%;font-size:12px;padding:8px;" onchange="importSound('${key}', this)">
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function selectSoundKey(key) {
+  document.querySelectorAll("[id^='soundInput_']").forEach(el => el.style.display = "none");
+  const inp = document.getElementById("soundInput_" + key);
+  inp.style.display = "block";
+  inp.click();
+}
+
+async function importSound(key, el) {
+  const f = el.files[0]; if (!f) return;
+  settings.sounds[key] = f;
+  await dbSet("sound_" + key, f);
+  const url = URL.createObjectURL(f);
+  if (soundAudio[key]) soundAudio[key].src = url; else soundAudio[key] = new Audio(url);
+  renderSoundList();
+  alert(`✅ Son "${soundLabels[key]}" mis à jour !`);
+}
+
+async function removeSound(key) {
+  settings.sounds[key] = null;
+  if (soundAudio[key]) { soundAudio[key].src = ""; delete soundAudio[key]; }
+  await dbDelete("sound_" + key);
+  renderSoundList();
+}
+
+function playSound(key) {
+  if (soundAudio[key]) { soundAudio[key].currentTime = 0; soundAudio[key].play().catch(()=>{}); }
+}
+
+/* ===== APPARENCE ===== */
+document.getElementById("confettiSpeed").addEventListener("input", function() {
+  settings.confettiSpeed = parseInt(this.value);
+  document.getElementById("confettiSpeedVal").textContent = this.value + "x";
+  dbSet("confettiSpeed", settings.confettiSpeed);
+});
+document.getElementById("bgOpacity").addEventListener("input", function() {
+  settings.bgOpacity = parseInt(this.value);
+  document.getElementById("bgOpacityVal").textContent = this.value + "%";
+  dbSet("bgOpacity", settings.bgOpacity);
+  renderBackground();
+});
+document.getElementById("cardSize").addEventListener("change", function() {
+  settings.cardSize = parseInt(this.value);
+  applyAppearance();
+  dbSet("cardSize", settings.cardSize);
+});
+
+function applyAppearance() {
+  document.querySelectorAll(".variants-grid").forEach(g => g.style.gridTemplateColumns = `repeat(auto-fill, minmax(${settings.cardSize}px, 1fr))`);
+  document.getElementById("confettiSpeed").value = settings.confettiSpeed;
+  document.getElementById("confettiSpeedVal").textContent = settings.confettiSpeed + "x";
+  document.getElementById("bgOpacity").value = settings.bgOpacity;
+  document.getElementById("bgOpacityVal").textContent = settings.bgOpacity + "%";
+  document.getElementById("cardSize").value = settings.cardSize;
+}
+
+/* ===== RESET ===== */
+async function resetSettings() {
+  if (!confirm("Tout réinitialiser ?")) return;
+  settings.background = null;
+  for (const k of Object.keys(settings.sounds)) { settings.sounds[k] = null; if (soundAudio[k]) { soundAudio[k].src=""; delete soundAudio[k]; } }
+  settings.confettiSpeed = 2; settings.bgOpacity = 40; settings.cardSize = 180;
+  await dbDelete("background");
+  for (const k of Object.keys(settings.sounds)) await dbDelete("sound_" + k);
+  const old = document.getElementById("customBgVideo"); if (old) old.remove();
+  document.body.style.background = "";
+  const ov = document.getElementById("bgOverlay"); if (ov) ov.remove();
+  applyAppearance(); renderSoundList(); updateBgPreview();
+  alert("✅ Réinitialisé !");
+}
+
+/* ===== MODAL ===== */
+function openSettings() { document.getElementById("settingsModal").classList.add("active"); updateBgPreview(); renderSoundList(); }
+function closeSettings() { document.getElementById("settingsModal").classList.remove("active"); }
+
+/* ===== INTÉGRER LES SONS ===== */
+const _origCelebrate = celebrate;
+celebrate = function() {
+  playSound("complet");
+  _origCelebrate();
+};
+const _origClick = clickVariant;
+clickVariant = function(id) { _origClick(id); playSound("clic"); };
+const _origHunt = getHuntTarget;
+getHuntTarget = function() { _origHunt(); playSound("chasse"); };
+const _origCompare = compareCollections;
+compareCollections = function() { _origCompare(); playSound("comparaison"); };
+
+/* ===== LANCER ===== */
+initSettings();   
 
 </script>
+
+  <!-- Modal Paramètres -->
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
+  <div class="modal" style="max-width:550px;width:95%;max-height:85vh;overflow-y:auto;text-align:left;">
+    <h2>⚙️ Paramètres</h2>
+
+    <h3 style="color:#d9edff;margin:18px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
+      Fond personnalisé
+    </h3>
+    <p style="color:#8caed8;font-size:13px;margin-bottom:10px;">Image (.png, .jpg, .webp) ou vidéo (.mp4) en fond.</p>
+    <input type="file" id="bgFileInput" accept="image/*,video/mp4" style="width:100%;margin-bottom:8px;">
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button onclick="applyBackground()" style="flex:1;">✅ Appliquer</button>
+      <button onclick="removeBackground()" style="flex:1;background:#333;">❌ Retirer</button>
+    </div>
+    <div id="bgPreview" style="width:100%;height:120px;border-radius:10px;overflow:hidden;border:1px solid rgba(100,180,255,0.3);display:flex;align-items:center;justify-content:center;color:#8caed8;font-size:13px;">Aperçu du fond</div>
+
+    <h3 style="color:#d9edff;margin:25px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
+      Effets sonores
+    </h3>
+    <p style="color:#8caed8;font-size:13px;margin-bottom:12px;">Choisis quel son changer, puis importe un .mp3.</p>
+    <div id="soundList" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    <h3 style="color:#d9edff;margin:25px 0 10px;font-size:16px;border-bottom:1px solid rgba(100,180,255,0.2);padding-bottom:6px;">
+      Apparence
+    </h3>
+    <label style="color:#d9edff;font-size:14px;display:block;margin-bottom:6px;">Vitesse des confettis</label>
+    <input type="range" id="confettiSpeed" min="1" max="5" value="2" style="width:100%;margin-bottom:5px;">
+    <span id="confettiSpeedVal" style="color:#8caed8;font-size:12px;">2x</span>
+
+    <label style="color:#d9edff;font-size:14px;display:block;margin:15px 0 6px;">Opacité du fond</label>
+    <input type="range" id="bgOpacity" min="10" max="100" value="40" style="width:100%;margin-bottom:5px;">
+    <span id="bgOpacityVal" style="color:#8caed8;font-size:12px;">40%</span>
+
+    <label style="color:#d9edff;font-size:14px;display:block;margin:15px 0 6px;">Taille des cartes</label>
+    <select id="cardSize" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(100,180,255,0.3);background:rgba(4,17,42,0.85);color:white;">
+      <option value="150">Petite (150px)</option>
+      <option value="180" selected>Moyenne (180px)</option>
+      <option value="220">Grande (220px)</option>
+    </select>
+
+    <button onclick="resetSettings()" style="width:100%;margin-top:25px;background:#8B0000;">🗑️ Tout réinitialiser</button>
+    <button onclick="closeSettings()" style="width:100%;margin-top:10px;background:#333;">✖ Fermer</button>
+  </div>
+</div>   
+  
 </body>
 </html>
